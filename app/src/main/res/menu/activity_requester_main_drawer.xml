@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_prev_requests"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="My Previous Requests" />
+        <item
+            android:id="@+id/nav_saved_address"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Saved Address"/>
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Give Feedback" />
+        <item
+            android:id="@+id/nav_faq"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="FAQ" />
+    </group>
+
+    <item android:title="Profile Settings">
+        <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Edit Profile" />
+            <item
+                android:id="@+id/nav_log_out"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Log out" />
+        </menu>
+    </item>
+
+</menu>

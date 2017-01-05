@@ -1,0 +1,192 @@
+<resources>
+    <string name="app_name">Service Basket v2</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email/Mobile no.</string>
+    <string name="enter_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_register">Register</string>
+    <string name="choice_login">Existing User</string>
+    <string name="choice_register">New User</string>
+    <string name="action_submit">Submit</string>
+    <string name="action_sign_in_short">Log in</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_telno">This contact number is invalid</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_requester_main">Service Basket</string>
+    <string name="title_activity_account">Personal Details</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_provider_main">Service Basket</string>
+
+    <string name="welcome_message">Welcome user,</string>
+    <string name="title_account_type">Account type</string>
+    <string name="tandc">By clicking next you agree to the terms and conditions of the application. To read the terms and conditions,</string>
+    <string name="tandc_link"> TAP HERE</string>
+    <!--categories-->
+    <string-array name="Category">
+        <item>Cleaning</item>
+        <item>Beauty</item>
+        <item>Religion</item>
+        <item>Travel</item>
+        <item>Laundry</item>
+        <item>Repairs</item>
+        <item>Education</item>
+        <item>Entertainment</item>
+        <item>Handyman</item>
+        <item>Finance</item>
+        <item>Legal</item>
+        <item>Property</item>
+        <item>HealthCare</item>
+        <item>Security</item>
+    </string-array>
+
+    <string-array name="Cleaning">
+        <item>Car</item>
+        <item>Carpet</item>
+        <item>Chair</item>
+        <item>Fridge</item>
+        <item>Home</item>
+        <item>Kitchen</item>
+        <item>Mattress</item>
+        <item>Sofa</item>
+        <item>Washroom</item>
+        <item>Window</item>
+    </string-array>
+
+    <string-array name="Beauty">
+        <item>Bleaching</item>
+        <item>Cleanup</item>
+        <item>Facial</item>
+        <item>Combos</item>
+        <item>Hair-Care</item>
+        <item>Manicure</item>
+        <item>Massage</item>
+        <item>Pedicure</item>
+        <item>Threading</item>
+        <item>Waxing</item>
+    </string-array>
+
+    <string-array name="Religion">
+        <item>Pandit</item>
+        <item>BhaktiMandal</item>
+        <item>Band</item>
+    </string-array>
+
+    <string-array name="Travel">
+        <item>Rail/Bus Agent</item>
+        <item>Domestic Tours</item>
+        <item>International Tours</item>
+        <item>Adventure Tours</item>
+        <item>Custom Tours</item>
+        <item>Cab/Auto</item>
+        <item>Driver</item>
+    </string-array>
+
+    <string-array name="Laundry">
+        <item>Dry Cleaning</item>
+        <item>Value Packages</item>
+        <item>Wash/Iron</item>
+    </string-array>
+
+    <string-array name="Repairs">
+        <item>AC</item>
+        <item>Chimney</item>
+        <item>Computer</item>
+        <item>Fridge</item>
+        <item>Microwave</item>
+        <item>Purifier</item>
+        <item>Washing Machine</item>
+        <item>Gas/Stove</item>
+    </string-array>
+
+    <string-array name="Education">
+        <item>Private Tutor</item>
+        <item>Coaching Class</item>
+        <item>Career Counseling</item>
+        <item>Overseas Study</item>
+        <item>Dance</item>
+        <item>Music</item>
+        <item>Foreign Language</item>
+    </string-array>
+
+    <string-array name="Entertainment">
+        <item>DJ</item>
+        <item>Catering</item>
+        <item>Photography</item>
+        <item>Wedding planner</item>
+        <item>Band</item>
+    </string-array>
+
+    <string-array name="Handyman">
+        <item>Carpenter</item>
+        <item>Electrician</item>
+        <item>Mason</item>
+        <item>Painting</item>
+        <item>Plumbing</item>
+        <item>WaterProofing</item>
+        <item>SoundProofing</item>
+    </string-array>
+
+    <string-array name="Finance">
+        <item>Personal Tax</item>
+        <item>Corporate Tax</item>
+        <item>Financial Planner</item>
+        <item>Insurance</item>
+    </string-array>
+
+    <string-array name="Legal">
+        <item>Counsellor</item>
+        <item>Personal Lawyer</item>
+        <item>Corporate Lawyer</item>
+        <item>Documentation</item>
+    </string-array>
+
+    <string-array name="Property">
+        <item>Residential Buy/Sell</item>
+        <item>Commercial Buy/Sell</item>
+        <item>Agreement</item>
+    </string-array>
+
+    <string-array name="HealthCare">
+        <item>Physician Home Visit</item>
+        <item>Pathology</item>
+        <item>Physiotherapy</item>
+        <item>Nursing</item>
+        <item>Nutrionist</item>
+        <item>Ambulance</item>
+    </string-array>
+
+    <string-array name="Security">
+        <item>CCTV</item>
+        <item>Gatekeeper</item>
+        <item>Detectives</item>
+        <item>BodyGuard</item>
+    </string-array>
+
+    <string-array name="address_labels">
+        <item>Home</item>
+        <item>Home 2</item>
+        <item>Office</item>
+        <item>Other</item>
+    </string-array>
+
+    <string name="sample_date">11/11/1111</string>
+    <string name="sample_time">12:00 pm</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-3638041093684495/1415336969</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-3638041093684495/2892070164</string>
+    <string name="video_ad_unit_id">ca-app-pub-3638041093684495/3635603363</string>
+    <string name="title_activity_previous_requests">PreviousRequestsActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+</resources>

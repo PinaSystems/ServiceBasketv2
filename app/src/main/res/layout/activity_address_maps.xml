@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AddressMapsActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pinasystems.requesterside.AddressMapsActivity" />
+
+    <android.support.design.widget.TextInputLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/searchdetails"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/searchbutton">
+
+        <MultiAutoCompleteTextView
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:background="#FFFFFF"
+            android:hint="Search Location"
+            android:id="@+id/search"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_marginTop="11.5dp"
+        android:layout_height="50dp"
+        android:id="@+id/searchbutton"
+        android:src="@drawable/search_arrow"
+        android:clickable="true"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/adView"
+        android:background="@color/colorAccent"
+        android:textColor="#FFFFFF"
+        android:id="@+id/proceedaddress"
+        android:text="SUBMIT AND ADD DETAILS"
+        android:layout_marginBottom="10dp"
+        android:textStyle="bold"/>
+
+    <!-- view for AdMob Banner Ad -->
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id" />
+</RelativeLayout>

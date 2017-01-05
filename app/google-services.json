@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "758994762759",
+    "firebase_url": "https://servicebasketv2.firebaseio.com",
+    "project_id": "servicebasketv2",
+    "storage_bucket": "servicebasketv2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758994762759:android:67b0a6845237efe5",
+        "android_client_info": {
+          "package_name": "com.pinasystems.servicebasketv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758994762759-rsdlf1n7hu24b0fb5tma35o52qlrsgku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pinasystems.servicebasketv2",
+            "certificate_hash": "6E60B3A6AA5717454192119FB12E6F4DF1CB766C"
+          }
+        },
+        {
+          "client_id": "758994762759-v53nhea7fqd0s37hh9ctpo58e1dqlg5m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhDJZa-pV9cKdBmlKD-AD0uFuzgCgeXEI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758994762759-v53nhea7fqd0s37hh9ctpo58e1dqlg5m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
