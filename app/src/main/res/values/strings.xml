@@ -32,6 +32,7 @@
     <string name="title_account_type">Account type</string>
     <string name="tandc">By clicking next you agree to the terms and conditions of the application. To read the terms and conditions,</string>
     <string name="tandc_link"> TAP HERE</string>
+    <string name = "addaddress">Add New Address</string>
     <!--categories-->
     <string-array name="Category">
         <item>Cleaning</item>
@@ -188,5 +189,12 @@
     <string name="video_ad_unit_id">ca-app-pub-3638041093684495/3635603363</string>
     <string name="title_activity_previous_requests">PreviousRequestsActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string-array name="cancelrequest">
+        <item>No longer needed</item>
+        <item>Incorrect Subcategory selected</item>
+        <item>Did not get enough response from providers</item>
+        <item>Pricing received was high</item>
+        <item>Found Service Provider externally</item>
+    </string-array>
 
 </resources>

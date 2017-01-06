@@ -6,16 +6,8 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -52,8 +44,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.pinasystems.servicebasketv2.AppConfig.CATEGORIES_AND_SUBCATEGORIES;
 
 public class NewRequestActivity extends AppCompatActivity {
 
@@ -138,6 +128,8 @@ public class NewRequestActivity extends AppCompatActivity {
             getSubcat();
             tableLayoutaddress.setShrinkAllColumns(true);
             Toast.makeText(getApplicationContext(), "No saved Address", Toast.LENGTH_LONG).show();
+            Button buttonaddaddress = (Button) findViewById(R.id.changeaddress);
+            buttonaddaddress.setText(R.string.addaddress);
         }
     }
 

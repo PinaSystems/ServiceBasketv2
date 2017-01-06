@@ -2,22 +2,23 @@ package com.pinasystems.servicebasketv2;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +37,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class ProviderMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,10 +68,10 @@ public class ProviderMainActivity extends AppCompatActivity
 
 
         //Nav header part
-
-        TextView textViewemail = (TextView) findViewById(R.id.header_email);
-        TextView textViewname = (TextView) findViewById(R.id.header_name);
-        TextView textViewtelno = (TextView) findViewById(R.id.header_telno);
+        View navHeaderView= navigationView.getHeaderView(0);
+        TextView textViewemail = (TextView) navHeaderView.findViewById(R.id.header_email);
+        TextView textViewname = (TextView) navHeaderView.findViewById(R.id.header_name);
+        TextView textViewtelno = (TextView) navHeaderView.findViewById(R.id.header_telno);
 
         textViewemail.setText(((DataBank)getApplication()).getEmail());
         textViewname.setText(((DataBank)getApplication()).getName());
@@ -145,18 +144,20 @@ public class ProviderMainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_saved_address) {
-            // Handle the camera action
+        if (id == R.id.nav_prev_requests) {
+            Intent intent = new Intent(getApplicationContext(), PreviousRequestsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_faq) {
 
         } else if (id == R.id.nav_feedback) {
 
         } else if (id == R.id.nav_create_req) {
-
+            Intent intent = new Intent(getApplicationContext(),RequesterMainActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_log_out) {
-            loginStatus(false);
+            logoutDialog();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -164,6 +165,27 @@ public class ProviderMainActivity extends AppCompatActivity
         return true;
     }
     //================================Log out =====================================================//
+
+    private void logoutDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Log out");
+        builder.setMessage("Are you sure?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                loginStatus(false);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     private void loginStatus(boolean isloggedin) {
         SharedPreferences.Editor editor = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE).edit();
