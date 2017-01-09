@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -46,7 +45,6 @@ public class FAQActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         Context context = getApplicationContext();
         requestQueue = Volley.newRequestQueue(this);
-        Toast.makeText(getApplicationContext(),"Refreshing list",Toast.LENGTH_LONG).show();
         getData();
     }
     //This method will get data from the web api
