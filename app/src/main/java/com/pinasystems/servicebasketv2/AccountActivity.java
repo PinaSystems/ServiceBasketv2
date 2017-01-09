@@ -4,8 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -88,6 +88,8 @@ public class AccountActivity extends AppCompatActivity {
             editTextname.setError(getString(R.string.error_field_required));
             focusView = editTextname;
             terminate = true;
+        }else{
+            ((DataBank)getApplication()).setName(name);
         }
         if(TextUtils.isEmpty(finalinfo)){
             editTextfinalInfo.setError(getString(R.string.error_field_required));
@@ -95,17 +97,20 @@ public class AccountActivity extends AppCompatActivity {
             terminate = true;
         }
         if(loginwithemail){
+
             if(!isTelnoValid(finalinfo)){
                 editTextfinalInfo.setError(getString(R.string.error_invalid_telno));
                 focusView = editTextfinalInfo;
                 terminate = true;
             }
+            ((DataBank)getApplication()).setTelno(finalinfo);
         }else{
             if(!isEmailValid(finalinfo)){
                 editTextfinalInfo.setError(getString(R.string.error_invalid_email));
                 focusView = editTextfinalInfo;
                 terminate = true;
             }
+            ((DataBank)getApplication()).setEmail(finalinfo);
         }
         if (terminate) {
             focusView.requestFocus();

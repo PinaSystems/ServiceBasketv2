@@ -20,7 +20,7 @@
             android:title="FAQ" />
     </group>
 
-    <item android:title="Profile Settings">
+    <item android:title="">
         <menu>
             <item
                 android:id="@+id/nav_share"
