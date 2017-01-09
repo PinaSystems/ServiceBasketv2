@@ -32,7 +32,7 @@
     <string name="title_account_type">Account type</string>
     <string name="tandc">By clicking next you agree to the terms and conditions of the application. To read the terms and conditions,</string>
     <string name="tandc_link"> TAP HERE</string>
-    <string name = "addaddress">Add New Address</string>
+    <string name="addaddress">Add New Address</string>
     <!--categories-->
     <string-array name="Category">
         <item>Cleaning</item>
