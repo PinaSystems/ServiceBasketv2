@@ -81,12 +81,11 @@
         <activity
             android:name=".PreviousRequestsActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".MyRequestsDetailsActivity" />
         <activity android:name=".RequestClosedActivity" />
         <activity android:name=".RequestProvidersActivity" />
-        <activity android:name=".ViewProviderDetailsActivity"></activity>
+        <activity android:name=".ViewProviderDetailsActivity" />
 
         <service android:name=".FirebaseInstanceIDService">
             <intent-filter>
@@ -103,6 +102,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity android:name=".FAQActivity"></activity>
     </application>
 
 </manifest>
