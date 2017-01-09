@@ -149,6 +149,7 @@ public class RequesterMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_prev_requests) {
             Intent intent = new Intent(getApplicationContext(),PreviousRequestsActivity.class);
             startActivity(intent);
+
         } else if (id == R.id.nav_faq) {
             Intent intent = new Intent(getApplicationContext(),FAQActivity.class);
             startActivity(intent);
