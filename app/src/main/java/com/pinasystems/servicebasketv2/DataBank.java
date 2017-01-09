@@ -1,13 +1,8 @@
 package com.pinasystems.servicebasketv2;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
-import com.android.volley.toolbox.StringRequest;
-
-/**
- * Created by admin on 10/6/2016.
- */
-public class DataBank extends Application {
+public class DataBank extends MultiDexApplication {
 
     public String getCategory() {
         return category;
@@ -98,16 +93,6 @@ public class DataBank extends Application {
     }
 
     String account;
-
-    public String getFcm_token() {
-        return fcm_token;
-    }
-
-    public void setFcm_token(String fcm_token) {
-        this.fcm_token = fcm_token;
-    }
-
-    String fcm_token;
 
     String email;
     String telno;
