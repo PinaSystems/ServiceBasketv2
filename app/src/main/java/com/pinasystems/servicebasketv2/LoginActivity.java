@@ -321,12 +321,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 focusView = mUsernameView;
                 cancel = true;
             }else{
-                cancel = false;
                 ((DataBank)getApplication()).setTelno(username);
             }
             loginwithemail = false;
         }else{
-            cancel = false;
             ((DataBank)getApplication()).setEmail(username);
         }
 

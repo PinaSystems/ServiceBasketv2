@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_prev_requests"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/previous_requests"
             android:title="My Previous Requests" />
         <item
             android:id="@+id/nav_saved_address"
@@ -16,7 +16,7 @@
             android:title="Give Feedback" />
         <item
             android:id="@+id/nav_faq"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/faq"
             android:title="FAQ" />
     </group>
 
@@ -28,7 +28,7 @@
                 android:title="Edit Profile" />
             <item
                 android:id="@+id/nav_log_out"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/log_out"
                 android:title="Log out" />
         </menu>
     </item>

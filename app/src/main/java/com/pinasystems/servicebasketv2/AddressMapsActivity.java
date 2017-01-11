@@ -1,6 +1,5 @@
 package com.pinasystems.servicebasketv2;
 
-import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -315,6 +314,7 @@ public class AddressMapsActivity extends FragmentActivity implements GoogleApiCl
 
     }
 
+    String pincode , city;
     public void onSearch() {
         editTextSearch= (EditText) findViewById(R.id.search);
         String location = editTextSearch.getText().toString();
@@ -334,6 +334,14 @@ public class AddressMapsActivity extends FragmentActivity implements GoogleApiCl
                 address = addressList.get(0);
                 Latitude = address.getLatitude();
                 Longitude = address.getLongitude();
+                pincode = address.getPostalCode();
+                if(TextUtils.isEmpty(pincode)){
+                    pincode = address.getCountryCode();
+                }
+                city = address.getLocality();
+                if(TextUtils.isEmpty(city)){
+                    city = address.getSubLocality();
+                }
                 Marker();
             }
         }
@@ -360,6 +368,8 @@ public class AddressMapsActivity extends FragmentActivity implements GoogleApiCl
                 ((DataBank)getApplication()).setAddress(myAddress);
                 ((DataBank)getApplication()).setLat(lat);
                 ((DataBank)getApplication()).setLong(lang);
+                intent.putExtra("city",city);
+                intent.putExtra("pincode",pincode);
                 Log.e("LATITUDE",lat);
                 Log.e("LONGITUDE",lang);
                 startActivity(intent);

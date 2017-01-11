@@ -115,7 +115,7 @@
                         android:textStyle="bold"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:textColor="@color/colorAccent"
-                        android:text="Address"/>
+                        android:text="Enter Address"/>
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -131,13 +131,13 @@
 
                         <TableRow>
                             <TextView
-                                android:text="LABEL:"
+                                android:text=""
                                 android:id="@+id/addresslabel"
                                 android:textColor="@color/colorPrimary"
                                 android:textAppearance="?android:textAppearanceMedium"
                                 android:textStyle="bold"/>
                             <TextView
-                                android:text="Add a new Address"
+                                android:text="No saved address"
                                 android:id="@+id/address"
                                 android:textStyle="bold"
                                 android:textAppearance="?android:textAppearanceSmall"

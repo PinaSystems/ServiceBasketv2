@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -38,9 +39,11 @@ public class AccountActivity extends AppCompatActivity {
             editTextfinalInfo.setHint("Email");
             loginwithemail = false;
         }else if(loginwith.equalsIgnoreCase("email")){
-            editTextfinalInfo.setHint("Telno");
+            editTextfinalInfo.setHint("Mobile Number");
+            editTextfinalInfo.setInputType(InputType.TYPE_CLASS_PHONE);
             loginwithemail = true;
         }
+
         addListenerOnButton();
 
         // Load an ad into the AdMob banner view.

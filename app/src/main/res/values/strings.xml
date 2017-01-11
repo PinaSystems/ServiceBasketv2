@@ -29,9 +29,9 @@
     <string name="title_activity_provider_main">Service Basket</string>
 
     <string name="welcome_message">Welcome user,</string>
-    <string name="title_account_type">Account type</string>
-    <string name="tandc">By clicking next you agree to the terms and conditions of the application. To read the terms and conditions,</string>
-    <string name="tandc_link"> TAP HERE</string>
+    <string name="title_account_type">Account Details</string>
+    <string name="tandc">By clicking next you agree to the </string>
+    <string name="tandc_link"> Terms and Conditions of the application .</string>
     <string name="addaddress">Add New Address</string>
     <!--categories-->
     <string-array name="Category">

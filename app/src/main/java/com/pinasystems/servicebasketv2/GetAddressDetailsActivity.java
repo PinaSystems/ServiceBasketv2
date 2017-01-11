@@ -42,6 +42,19 @@ public class GetAddressDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_get_address_details);
         userId = ((DataBank)getApplication()).getUserId();
         addSpinner();
+        editTextcity = (EditText) findViewById(R.id.city);
+        editTextpincode = (EditText) findViewById(R.id.pincode);
+
+        Intent intent = getIntent();
+        String city = intent.getStringExtra("city");
+        String pincode = intent.getStringExtra("pincode");
+
+        if(!TextUtils.isEmpty(city)){
+            editTextcity.setText(city);
+        }
+        if(!TextUtils.isEmpty(pincode)){
+            editTextpincode.setText(pincode);
+        }
 
         editTextaddress = (EditText)
                 findViewById(R.id.address);
@@ -102,8 +115,6 @@ public class GetAddressDetailsActivity extends AppCompatActivity {
     }
 
     public void getData(){
-        editTextcity = (EditText) findViewById(R.id.city);
-        editTextpincode = (EditText) findViewById(R.id.pincode);
 
         String city = editTextcity.getText().toString().trim();
         String pincode = editTextpincode.getText().toString().trim();
