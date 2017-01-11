@@ -129,6 +129,8 @@ public class NewRequestActivity extends AppCompatActivity {
             tableLayoutaddress.setShrinkAllColumns(true);
             Toast.makeText(getApplicationContext(), "No saved Address", Toast.LENGTH_LONG).show();
             Button buttonaddaddress = (Button) findViewById(R.id.changeaddress);
+            TableLayout tableLayout = (TableLayout) findViewById(R.id.addresstable);
+            tableLayout.setVisibility(View.GONE);
             buttonaddaddress.setText(R.string.addaddress);
         }
     }
