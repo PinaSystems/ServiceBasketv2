@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -102,6 +103,10 @@ public class SavedAddressesActivity extends AppCompatActivity {
                         Log.e("TAG",response.toString());
                         //calling method to parse json array
                         parseData(response);
+                        if(response.isNull(0)){
+                            TextView textViewdefault = (TextView) findViewById(R.id.defaulttext);
+                            textViewdefault.setVisibility(View.VISIBLE);
+                        }
                     }
                 },
                 new Response.ErrorListener() {

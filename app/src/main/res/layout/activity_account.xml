@@ -125,7 +125,7 @@
         style="?android:textAppearanceSmall"
         android:text="Next"
         android:textColor="@color/colorWhite"
-        android:background="@color/colorButton"
+        android:background="@color/colorAccent"
         android:id="@+id/buttonsubmit"
         android:textStyle="bold"
         android:layout_below="@+id/tandc"
