@@ -296,7 +296,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if(TextUtils.isEmpty(password)){
+            mPasswordView.setError("Password field is empty");
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        if (!isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -307,23 +313,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
-        } else if (!isEmailValid(username)) {
+        }
+
+        if (!isEmailValid(username)) {
             if (!isTelnoValid(username)){
-                mUsernameView.setError("Invalid Mobile Number");
+                mUsernameView.setError("Invalid Username");
                 focusView = mUsernameView;
                 cancel = true;
             }else{
+                cancel = false;
                 ((DataBank)getApplication()).setTelno(username);
             }
             loginwithemail = false;
         }else{
+            cancel = false;
             ((DataBank)getApplication()).setEmail(username);
         }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
-            focusView.requestFocus();
+            if (focusView != null) {
+                focusView.requestFocus();
+            }
+            Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -508,6 +521,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }else{
                 subcategory = "requester only";
             }
+            if (userId.equalsIgnoreCase("Error")) {
+                MessageDialog(account);
+                showProgress(false);
+            } else {
+
+                ((DataBank) getApplication()).setUserId(userId);
+                String fcm_token = getFCMFromMemory();
+                storeToken(fcm_token,userId);
+                nextActivity(account, userId);
+            }
             if(islogin){
                 if(!TextUtils.isEmpty(json.getString("email"))){
                     ((DataBank)getApplication()).setEmail(json.getString("email"));
@@ -518,15 +541,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if(!TextUtils.isEmpty(json.getString("telno"))){
                     ((DataBank)getApplication()).setTelno(json.getString("telno"));
                 }
-            }
-            if (userId.equalsIgnoreCase("Error")) {
-                MessageDialog(account);
-                showProgress(false);
-            } else {
-                ((DataBank) getApplication()).setUserId(userId);
-                String fcm_token = getFCMFromMemory();
-                storeToken(fcm_token,userId);
-                nextActivity(account, userId);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -573,7 +587,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(getApplicationContext(),"Login again",Toast.LENGTH_LONG).show();
+
             }
         });
 
