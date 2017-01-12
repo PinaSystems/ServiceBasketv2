@@ -102,7 +102,7 @@ public class AccountActivity extends AppCompatActivity {
         if(loginwithemail){
 
             if(!isTelnoValid(finalinfo)){
-                editTextfinalInfo.setError(getString(R.string.error_invalid_telno));
+                editTextfinalInfo.setError("Please enter a valid 10 digit number");
                 focusView = editTextfinalInfo;
                 terminate = true;
             }

@@ -152,11 +152,19 @@ public class ProviderMainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_feedback) {
-
+            Intent intent = new Intent(getApplicationContext(),AppFeedbackActivity.class);
+            intent.putExtra("isrequester",false);
+            startActivity(intent);
         } else if (id == R.id.nav_create_req) {
             Intent intent = new Intent(getApplicationContext(),RequesterMainActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
+            String message = "Hi! I am using Service Basket";
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, message);
+
+            startActivity(Intent.createChooser(share, "Share this application via"));
 
         } else if (id == R.id.nav_log_out) {
             logoutDialog();

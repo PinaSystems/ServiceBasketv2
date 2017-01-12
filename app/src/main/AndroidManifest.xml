@@ -82,7 +82,7 @@
         <activity
             android:name=".PreviousRequestsActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MyRequestsDetailsActivity" />
         <activity android:name=".RequestClosedActivity" />
         <activity android:name=".RequestProvidersActivity" />
@@ -103,7 +103,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".FAQActivity"></activity>
+        <activity android:name=".FAQActivity" />
+        <activity android:name=".AppFeedbackActivity"></activity>
     </application>
 
 </manifest>

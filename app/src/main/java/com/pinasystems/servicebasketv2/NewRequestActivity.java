@@ -187,7 +187,7 @@ public class NewRequestActivity extends AppCompatActivity {
             textViewaddress.setText(address);
             textViewpincode.setText(pincode);
             textViewcity.setText(city);
-            
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -294,7 +294,7 @@ public class NewRequestActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("NEWREQUEST", error.getMessage());
+                        error.printStackTrace();
                         loading.dismiss();
                     }
                 });
