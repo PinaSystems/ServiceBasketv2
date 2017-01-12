@@ -187,7 +187,7 @@ public class NewRequestActivity extends AppCompatActivity {
             textViewaddress.setText(address);
             textViewpincode.setText(pincode);
             textViewcity.setText(city);
-
+            
         } catch (JSONException e) {
             e.printStackTrace();
         }
