@@ -115,7 +115,7 @@
                         android:textStyle="bold"
                         android:textAppearance="?android:textAppearanceLarge"
                         android:textColor="@color/colorAccent"
-                        android:text="Enter Address"/>
+                        android:text="Address"/>
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
                         android:textStyle="bold"
                         android:id="@+id/changeaddress"
                         android:layout_marginTop="10dp"
-                        android:text="Use Different address"/>
+                        android:text="Change Address"/>
 
 
                 </RelativeLayout>

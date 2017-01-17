@@ -28,7 +28,7 @@
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@color/colorAccent"
         android:layout_marginTop="20dp"
-        android:text="Some welcome text , info about the application"/>
+        android:text="Thank you for using Service Basket. Your feedback is valuable to us . Please provide the feedback below."/>
 
     <EditText
         android:layout_width="match_parent"
@@ -38,8 +38,7 @@
         android:id="@+id/feedback"
         android:textColorHint="@color/colorAccent"
         android:layout_marginTop="20dp"
-        android:inputType="textMultiLine"
-        android:hint="Enter your feedback or suggestions here"/>
+        android:inputType="textMultiLine"/>
 
     <Button
         android:layout_width="match_parent"

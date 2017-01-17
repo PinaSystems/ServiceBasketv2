@@ -117,6 +117,7 @@
             android:textStyle="italic"
             android:layout_marginTop="5dp"
             android:textColor="#0000EE"
+            android:id="@+id/terms_and_conditions"
             android:textColorLink="#551A8B"
             android:textAlignment="center"
             android:textAppearance="?android:textAppearanceSmall"/>
@@ -130,8 +131,7 @@
         android:background="@color/colorAccent"
         android:id="@+id/buttonsubmit"
         android:textStyle="bold"
-        android:layout_below="@+id/tandc"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 
     </LinearLayout>
     </ScrollView>

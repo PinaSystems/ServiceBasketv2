@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private RadioButton radioButtonlogin,radioButtonregister;
     private String URL;
     boolean islogin;
+    String loginid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +138,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
+
+        Initialize();
+    }
+
+    private void Initialize() {
+        SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
+        String restoredText = sharedPreferences.getString(AppConfig.PREF_DATA, null);
+
+        if (restoredText != null) {
+            loginid = sharedPreferences.getString(AppConfig.PREF_USERNAME, "Enter here");
+            mUsernameView.setText(loginid);
+        }
     }
 
     //Send email parameter for forgot password
@@ -343,7 +356,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if(!loginwithemail){
                 loginwith = "telno";
             }
+            loginid = username;
             LoginTask(username,password,URL);
+
         }
     }
 
@@ -451,7 +466,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    private void LoginTask(final String username, String password,String URL){
+
+    //Login task server side method
+
+    private void LoginTask(String username, String password,String URL){
         final String uUsername = username;
         final String uPassword = password;
         final String uURL = URL;
@@ -546,6 +564,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    //get FCM token and store token in SQL server
 
     private String getFCMFromMemory(){
         SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
@@ -623,6 +642,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void storeDataInMemory(String account,String userId){
         SharedPreferences.Editor editor = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putString(AppConfig.PREF_DATA,account);
+        editor.putString(AppConfig.PREF_USERNAME,loginid);
         editor.putString(AppConfig.USER_ID,userId);
         editor.putBoolean(AppConfig.PREF_LOGIN_STATUS,true);
         editor.putString(AppConfig.PREF_TEMP,loginwith);

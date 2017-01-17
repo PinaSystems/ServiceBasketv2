@@ -336,7 +336,7 @@ public class AddressMapsActivity extends FragmentActivity implements GoogleApiCl
                 Longitude = address.getLongitude();
                 pincode = address.getPostalCode();
                 if(TextUtils.isEmpty(pincode)){
-                    pincode = address.getCountryCode();
+                    pincode = "enter here";
                 }
                 city = address.getLocality();
                 if(TextUtils.isEmpty(city)){
