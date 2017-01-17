@@ -33,8 +33,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,12 +62,15 @@ public class NewRequestActivity extends AppCompatActivity {
     String latitude;
     String longitude;
     TableLayout tableLayoutaddress;
+    Button chgaddress;
+    Button btnsubmitrequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_request);
         tableLayoutaddress = (TableLayout) findViewById(R.id.addresstable);
+        chgaddress = (Button) findViewById(R.id.changeaddress);
         category = ((DataBank) getApplication()).getCategory();
         Log.w("Category", category);
         getDatafromMemory();
@@ -87,22 +92,17 @@ public class NewRequestActivity extends AppCompatActivity {
             }
         });
 
-        Button btnchangeaddress = (Button) findViewById(R.id.changeaddress);
-        btnchangeaddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SavedAddressesActivity.class);
-                startActivity(intent);
-            }
-        });
-
         addTimeDetails();
 
-        Button btnsubmitrequest = (Button) findViewById(R.id.submitrequest);
+        mInterstitialAd = newInterstitialAd();
+        loadInterstitial();
+
+        btnsubmitrequest = (Button) findViewById(R.id.submitrequest);
         btnsubmitrequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getData();
+
             }
         });
 
@@ -112,6 +112,49 @@ public class NewRequestActivity extends AppCompatActivity {
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
     }
+
+    InterstitialAd mInterstitialAd;
+    boolean proceed = false;
+
+    private InterstitialAd newInterstitialAd() {
+        InterstitialAd interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.video_ad_unit_id));
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                btnsubmitrequest.setEnabled(true);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                btnsubmitrequest.setEnabled(true);
+            }
+
+            @Override
+            public void onAdClosed() {
+                nextActivity(proceed);
+            }
+        });
+        return interstitialAd;
+    }
+
+    private void showInterstitial() {
+        // Show the ad if it's ready. Otherwise toast and reload the ad.
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+            Toast.makeText(getApplicationContext(),"Submitting data",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadInterstitial() {
+        // Disable the next level button and load the ad.
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        mInterstitialAd.loadAd(adRequest);
+    }
+
 
     private void getDatafromMemory() {
         SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
@@ -124,12 +167,28 @@ public class NewRequestActivity extends AppCompatActivity {
             String address_label = pref_address + ":";
             textViewaddresslabel.setText(address_label);
             getAddress(pref_address);
+            chgaddress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(),SavedAddressesActivity.class);
+                    startActivity(intent);
+                }
+            });
+
         } else {
             getSubcat();
             tableLayoutaddress.setShrinkAllColumns(true);
             Toast.makeText(getApplicationContext(), "No saved Address", Toast.LENGTH_LONG).show();
-            Button buttonaddaddress = (Button) findViewById(R.id.changeaddress);
-            buttonaddaddress.setText(R.string.addaddress);
+            chgaddress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(),AddressMapsActivity.class);
+                    startActivity(intent);
+                }
+            });
+            TableLayout tableLayout = (TableLayout) findViewById(R.id.addresstable);
+            tableLayout.setVisibility(View.GONE);
+            chgaddress.setText(R.string.addaddress);
         }
     }
 
@@ -292,7 +351,7 @@ public class NewRequestActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("NEWREQUEST", error.getMessage());
+                                          error.printStackTrace();
                         loading.dismiss();
                     }
                 });
@@ -426,6 +485,7 @@ public class NewRequestActivity extends AppCompatActivity {
             terminate = true;
         }
         if (!terminate) {
+            showInterstitial();
             sendData(description);
         }
     }
@@ -434,25 +494,26 @@ public class NewRequestActivity extends AppCompatActivity {
 
     private void sendData(final String description) {
 
-        final ProgressDialog loading = ProgressDialog.show(this, "Submitting", "Posting Request...", true, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConfig.CREATE_REQUEST, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (TextUtils.isDigitsOnly(response)) {
-                    loading.dismiss();
                     Log.e("RESPONSE", response);
                     Toast.makeText(getApplicationContext(), "Request id is:" + response, Toast.LENGTH_LONG).show();
                     request_id = response;
                     ((DataBank) getApplication()).setRequest_id(request_id);
-                    nextActivity(true);
+                    proceed = true;
                 } else {
+                    proceed = false;
+                    mInterstitialAd = new InterstitialAd(getApplicationContext());
+                    loadInterstitial();
                     Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                loading.dismiss();
+                error.printStackTrace();
             }
         }) {
             @Override

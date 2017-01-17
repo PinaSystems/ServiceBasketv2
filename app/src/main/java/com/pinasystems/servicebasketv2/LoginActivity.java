@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private RadioButton radioButtonlogin,radioButtonregister;
     private String URL;
     boolean islogin;
+    String loginid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +138,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
+
+        Initialize();
+    }
+
+    private void Initialize() {
+        SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
+        String restoredText = sharedPreferences.getString(AppConfig.PREF_DATA, null);
+
+        if (restoredText != null) {
+            loginid = sharedPreferences.getString(AppConfig.PREF_USERNAME, "Enter here");
+            mUsernameView.setText(loginid);
+        }
     }
 
     //Send email parameter for forgot password
@@ -282,7 +295,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     boolean loginwithemail = true;
     String loginwith = "email";
-    boolean cancel = false;
 
     private void attemptLogin() {
         // Reset errors.
@@ -292,7 +304,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String username = mUsernameView.getText().toString();
         String password = mPasswordView.getText().toString();
-
+        boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
@@ -300,12 +312,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPasswordView.setError("Password field is empty");
             focusView = mPasswordView;
             cancel = true;
+            Log.e("Password","empty");
         }
 
         if (!isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+            mPasswordView.setError("Password should be at least 5 characters");
             focusView = mPasswordView;
             cancel = true;
+            Log.e("Password","Short");
         }
 
         // Check for a valid email address.
@@ -313,6 +327,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
+            Log.e("Username","empty");
         }
 
         if (!isEmailValid(username)) {
@@ -320,21 +335,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 mUsernameView.setError("Invalid Username");
                 focusView = mUsernameView;
                 cancel = true;
+                Log.e("username","inValid");
             }else{
                 ((DataBank)getApplication()).setTelno(username);
             }
             loginwithemail = false;
         }else{
+            Log.e("Username","is email");
             ((DataBank)getApplication()).setEmail(username);
         }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
-            if (focusView != null) {
-                focusView.requestFocus();
-            }
-            Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
+            focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
@@ -342,7 +356,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if(!loginwithemail){
                 loginwith = "telno";
             }
+            loginid = username;
             LoginTask(username,password,URL);
+
         }
     }
 
@@ -393,7 +409,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -451,7 +466,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    private void LoginTask(final String username, String password,String URL){
+
+    //Login task server side method
+
+    private void LoginTask(String username, String password,String URL){
         final String uUsername = username;
         final String uPassword = password;
         final String uURL = URL;
@@ -469,7 +487,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void onErrorResponse(VolleyError error) {
                         //You can handle error here if you want
                         showProgress(false);
-                        Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                        error.printStackTrace();
+                        Toast.makeText(getApplicationContext(),"Error connecting to the internet.",Toast.LENGTH_LONG).show();
                     }
                 }){
             @Override
@@ -545,6 +564,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    //get FCM token and store token in SQL server
 
     private String getFCMFromMemory(){
         SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
@@ -622,6 +642,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void storeDataInMemory(String account,String userId){
         SharedPreferences.Editor editor = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putString(AppConfig.PREF_DATA,account);
+        editor.putString(AppConfig.PREF_USERNAME,loginid);
         editor.putString(AppConfig.USER_ID,userId);
         editor.putBoolean(AppConfig.PREF_LOGIN_STATUS,true);
         editor.putString(AppConfig.PREF_TEMP,loginwith);

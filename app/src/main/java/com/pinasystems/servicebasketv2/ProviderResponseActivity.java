@@ -2,13 +2,13 @@ package com.pinasystems.servicebasketv2;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -27,8 +27,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,16 +56,18 @@ public class ProviderResponseActivity extends AppCompatActivity {
     private Calendar calendar;
     private int year, month, day;
     String request_id;
+    Button btnacceptrequest;
 
     private static final String GET_REQUEST_DATA_URL = "http://pinasystemsdb.890m.com/sbv2php/getrequestdata.php?reqid=";
 
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_provider_response);
         Intent intent = getIntent();
-        String request_id = intent.getStringExtra("reqid");
+        request_id = intent.getStringExtra("reqid");
         user_id = ((DataBank)getApplication()).getUserId();
         getData(request_id);
         textViewsubcategory = (TextView) findViewById(R.id.subcategory);
@@ -84,11 +88,14 @@ public class ProviderResponseActivity extends AppCompatActivity {
         showDate(year, month+1, day);
         textViewprovtime = (TextView) findViewById(R.id.provtime);
 
+
         // Load an ad into the AdMob banner view.
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
+        mInterstitialAd = newInterstitialAd();
+        loadInterstitial();
 
         Button btnsetDateandTime =(Button) findViewById(R.id.setdate);
 
@@ -132,7 +139,7 @@ public class ProviderResponseActivity extends AppCompatActivity {
             }
         });
 
-        Button btnacceptrequest = (Button) findViewById(R.id.acceptrequest);
+        btnacceptrequest = (Button) findViewById(R.id.acceptrequest);
         btnacceptrequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -322,19 +329,33 @@ public class ProviderResponseActivity extends AppCompatActivity {
                 + ":" + String.valueOf(currentMinute) + " " + aMpM);
     }
 
-    private void warningDialog(){
+    private void warningDialog(final String maxprice , final String minprice , final String com){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Accept Request");
         builder.setMessage("Sending response with a price range or comment can increase the chance of requester to contact you.");
         builder.setPositiveButton("Send without it", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String max_price = "Not specified";
-                String min_price = "Not specified";
-                String comment = "No comment submitted by the provider";
+                String max_price , min_price , comment ;
+                if(TextUtils.isEmpty(maxprice)){
+                    max_price = "Not specified";
+                }else{
+                    max_price = maxprice ;
+                }
+                if(TextUtils.isEmpty(minprice)) {
+                    min_price = "Not specified";
+                }else{
+                    min_price = minprice;
+                }
+                if(TextUtils.isEmpty(com)){
+                    comment = "No comment submitted by the provider";
+                }else{
+                    comment = com;
+                }
                 String est_date = textViewprovdate.getText().toString().trim();
                 String est_time = textViewprovtime.getText().toString().trim();
                 sendData(max_price,min_price,comment,est_date,est_time);
+                showInterstitial();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -359,34 +380,81 @@ public class ProviderResponseActivity extends AppCompatActivity {
         String min_price = editTextminprice.getText().toString().trim();
         String comment = editTextcomment.getText().toString().trim();
         if(max_price.isEmpty() || min_price.isEmpty() || comment.isEmpty()){
-            warningDialog();
+            warningDialog(max_price , min_price , comment);
             terminate = true;
         }
 
         if(!terminate){
             String est_date = textViewprovdate.getText().toString().trim();
             String est_time = textViewprovtime.getText().toString().trim();
+            showInterstitial();
             sendData(max_price,min_price,comment,est_date,est_time);
         }
     }
 
-    String user_id;
+
+    InterstitialAd mInterstitialAd;
+    boolean proceed = false;
+    private InterstitialAd newInterstitialAd() {
+        InterstitialAd interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(getString(R.string.video_ad_unit_id));
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                btnacceptrequest.setEnabled(true);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                btnacceptrequest.setEnabled(true);
+            }
+
+            @Override
+            public void onAdClosed() {
+                nextActivity(proceed);
+            }
+        });
+        return interstitialAd;
+    }
+
+    private void showInterstitial() {
+        // Show the ad if it's ready. Otherwise toast and reload the ad.
+        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadInterstitial() {
+        // Disable the next level button and load the ad.
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        mInterstitialAd.loadAd(adRequest);
+    }
+
+
     private void sendData(final String max_price, final String min_price, final String comment, final String date, final String time){
-        final String URL = "http://pinasystemsdb.890m.com/sbv2php/acceptrequest.php";
-        final ProgressDialog progressDialog = ProgressDialog.show(getApplicationContext(),"Sending response","Please Wait....",false,false);
+        String URL = AppConfig.ROOT_URL +"acceptrequest.php";
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
-                Log.e("RESPONSE",response);
-                progressDialog.dismiss();
+                if(response.equalsIgnoreCase("Response submitted successfully")){
+                    Toast.makeText(getApplicationContext(),response,Toast.LENGTH_SHORT).show();
+                    proceed = true;
+                }else{
+                    Toast.makeText(getApplicationContext(),"Server Error . Please try again later",Toast.LENGTH_LONG).show();
+                    mInterstitialAd = new InterstitialAd(getApplicationContext());
+                    loadInterstitial();
+                    proceed = false;
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
-                Log.e("TAG",error.getMessage());
+                Toast.makeText(getApplicationContext(),"Unable to connect to the internet",Toast.LENGTH_LONG).show();
+                error.printStackTrace();
             }
         }){
             @Override
@@ -405,4 +473,13 @@ public class ProviderResponseActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
+
+    private void nextActivity(boolean proceed) {
+        if (proceed) {
+            Intent intent = new Intent(getApplicationContext(), ProviderMainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
 }

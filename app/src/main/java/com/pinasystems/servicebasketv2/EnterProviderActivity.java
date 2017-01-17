@@ -7,10 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.annotation.BoolRes;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,17 +16,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -44,7 +41,7 @@ import java.util.List;
 
 public class EnterProviderActivity extends AppCompatActivity {
     private TextView textViewsubcategory;
-    private EditText editTextpostalAddress, editTextState, editTextPincode, editTextCity,editTextpostalAddress2;
+    private EditText editTextpostalAddress, editTextPincode,editTextpostalAddress2;
     private String category, subcategory, postal, state, pincode, city,userId,subcategories;
     String[] service;
     boolean[] checkedService;
@@ -58,9 +55,7 @@ public class EnterProviderActivity extends AppCompatActivity {
         Button buttonsubmit = (Button) findViewById(R.id.provider_details_submit);
         textViewsubcategory = (TextView) findViewById(R.id.textviewsubcategory);
         editTextpostalAddress = (EditText) findViewById(R.id.postaladdress);
-        editTextState = (EditText) findViewById(R.id.state);
         editTextPincode = (EditText) findViewById(R.id.pincode);
-        editTextCity = (EditText) findViewById(R.id.city);
         editTextpostalAddress2 = (EditText) findViewById(R.id.postaladdress2);
         userId = ((DataBank)getApplication()).getUserId();
         String getcategory = "category";
@@ -77,6 +72,7 @@ public class EnterProviderActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
+        getStatesAndCities(false);
 
     }
 
@@ -144,7 +140,7 @@ public class EnterProviderActivity extends AppCompatActivity {
                 builder.setCancelable(true);
 
                 // Set a title for alert dialog
-                builder.setTitle("Specialized Services?");
+                builder.setTitle("Service Subcategory");
 
                 // Set the positive/yes button click listener
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -185,17 +181,10 @@ public class EnterProviderActivity extends AppCompatActivity {
             terminate = true;
         }
         postal = editTextpostalAddress.getText().toString() + ", " + editTextpostalAddress2.getText().toString();
-        state = editTextState.getText().toString().trim();
         pincode = editTextPincode.getText().toString().trim();
-        city = editTextCity.getText().toString().trim();
         if (TextUtils.isEmpty(postal)) {
             editTextpostalAddress.setError(getString(R.string.error_field_required));
             focusView = editTextpostalAddress;
-            terminate = true;
-        }
-        if (TextUtils.isEmpty(state)) {
-            editTextState.setError(getString(R.string.error_field_required));
-            focusView = editTextState;
             terminate = true;
         }
         if (TextUtils.isEmpty(pincode)) {
@@ -203,9 +192,9 @@ public class EnterProviderActivity extends AppCompatActivity {
             focusView = editTextPincode;
             terminate = true;
         }
-        if (TextUtils.isEmpty(city)) {
-            editTextCity.setError(getString(R.string.error_field_required));
-            focusView = editTextCity;
+        if(!isPincodeValid(pincode)){
+            editTextPincode.setError("Invalid Pincode");
+            focusView = editTextPincode;
             terminate = true;
         }
         if (terminate) {
@@ -216,6 +205,11 @@ public class EnterProviderActivity extends AppCompatActivity {
             Log.e(AppConfig.SUBCATEGORY,subcategory);
         }
     }
+
+    private boolean isPincodeValid(String pincode){
+        return (TextUtils.isDigitsOnly(pincode) && pincode.length() == 6);
+    }
+
     ProgressDialog loading;
 
     public void sendData() {
@@ -357,5 +351,110 @@ public class EnterProviderActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putString(AppConfig.PREF_SUBCATEGORY,subcategory);
         editor.apply();
+    }
+
+    //Get states from WhizAPI
+
+    private void getStatesAndCities(final boolean getcities){
+        String APIKey = "5mzhbascarxg6j8s6vz5llt3";
+        String API;
+        if(getcities){
+            API = "https://www.whizapi.com/api/v2/util/ui/in/indian-city-by-state?stateid="+state_id+"&project-app-key="+APIKey;
+        }else{
+            API = "https://www.whizapi.com/api/v2/util/ui/in/indian-states-list?project-app-key="+APIKey;
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(API, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                parseStatesandCities(response,getcities);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    ArrayList<String> states;
+    ArrayList<Integer> states_id;
+    ArrayList<String> cities;
+
+    //This method will parse json data
+    private void parseStatesandCities(JSONObject object , boolean parsecities) {
+        JSONObject json = null;
+        if(parsecities){
+            try {
+                json = object;
+                cities = new ArrayList<>();
+                JSONArray jsonArray = json.getJSONArray("Data");
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    json = jsonArray.getJSONObject(j);
+                    cities.add(json.getString("city"));
+                }
+                addCitiesSpinner();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else{
+            try {
+                json = object;
+                states = new ArrayList<>();
+                states_id = new ArrayList<>();
+                JSONArray jsonArray = json.getJSONArray("Data");
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    json = jsonArray.getJSONObject(j);
+                    states.add(json.getString("Name"));
+                    states_id.add(json.getInt("ID"));
+                }
+                addStatesSpinner();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    int state_id;
+
+    public void addStatesSpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.statesspinner);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, states);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                state = parent.getItemAtPosition(position).toString();
+                state_id = states_id.get(position);
+                getStatesAndCities(true);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+
+    public void addCitiesSpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.citiesspinner);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cities);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                city = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }

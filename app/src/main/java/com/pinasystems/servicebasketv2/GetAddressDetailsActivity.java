@@ -116,6 +116,7 @@ public class GetAddressDetailsActivity extends AppCompatActivity {
 
     public void getData(){
 
+        View focusView = null;
         String city = editTextcity.getText().toString().trim();
         String pincode = editTextpincode.getText().toString().trim();
         String address = editTextaddress.getText().toString().trim();
@@ -128,22 +129,27 @@ public class GetAddressDetailsActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(city)){
             terminate = true;
+            focusView = editTextcity;
             editTextcity.setError("Field Required");
         }
         if(TextUtils.isEmpty(pincode)){
             terminate = true;
+            focusView = editTextpincode;
             editTextpincode.setError("Field Required");
         }
         if(TextUtils.isEmpty(address)){
             terminate = true;
+            focusView = editTextaddress;
             editTextaddress.setError("Field Required");
         }
         if(!isPincodeValid(pincode)){
             terminate = true;
+            focusView = editTextpincode;
             editTextpincode.setError("Please enter a valid 6 digit pincode");
         }
         if(TextUtils.isEmpty(address_label)){
             terminate = true;
+            focusView = editTextlabel;
             editTextlabel.setError("Field Required");
         }
         if(!terminate) {
@@ -154,6 +160,8 @@ public class GetAddressDetailsActivity extends AppCompatActivity {
             Log.e("LONGITUDE",longitude);
             sendData(address, city, pincode , latitude , longitude);
 
+        }else{
+            focusView.requestFocus();
         }
     }
 

@@ -19,6 +19,7 @@ public class AddressCardAdapter extends RecyclerView.Adapter<AddressCardAdapter.
 
     List<Addresses> addresses;
 
+
     public AddressCardAdapter(List<Addresses> addresses, Context context) {
         super();
         this.addresses = addresses;

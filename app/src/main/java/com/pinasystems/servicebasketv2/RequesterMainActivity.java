@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -116,37 +116,13 @@ public class RequesterMainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.requester_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_create_req) {
-            // Handle the camera action
-        } else if (id == R.id.nav_prev_requests) {
+        if (id == R.id.nav_prev_requests) {
             Intent intent = new Intent(getApplicationContext(),PreviousRequestsActivity.class);
             startActivity(intent);
 
@@ -154,9 +130,17 @@ public class RequesterMainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(),FAQActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_saved_address) {
-
+        } else if (id == R.id.nav_feedback) {
+            Intent intent = new Intent(getApplicationContext(),AppFeedbackActivity.class);
+            intent.putExtra("isrequester",true);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
+            String message = "Hi! I am using Service Basket";
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, message);
+
+            startActivity(Intent.createChooser(share, "Share this application via"));
 
         } else if (id == R.id.nav_log_out) {
             logoutDialog();
@@ -222,7 +206,7 @@ public class RequesterMainActivity extends AppCompatActivity
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("VOLLEY",error.getMessage());
+                        error.printStackTrace();
                         loading.dismiss();
                     }
                 });

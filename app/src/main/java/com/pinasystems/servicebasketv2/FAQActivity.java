@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -74,7 +75,8 @@ public class FAQActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         loading.dismiss();
-                        Log.e("REQUESTS FETCH ERROR",error.getMessage());
+                        error.printStackTrace();
+                        Toast.makeText(getApplicationContext(),"Error connecting to internet",Toast.LENGTH_LONG).show();
                     }
                 });
 

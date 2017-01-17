@@ -168,13 +168,12 @@ public class PreviousRequestsActivity extends AppCompatActivity {
 
                         //calling method to parse json array
                         parseData(response);
-                        Log.e("RESPONSE",response.toString());
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("VOLLEY",error.getMessage());
+                        error.printStackTrace();
                         loading.dismiss();
                     }
                 });

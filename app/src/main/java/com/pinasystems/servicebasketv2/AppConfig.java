@@ -64,6 +64,7 @@ public class AppConfig {
     public static final String PREF_ADDRESS_LABEL = "label";
     public static final String PREF_SUBCATEGORY = "subcategory";
     public static final String PREF_FCM_TOKEN = "fcm_token";
+    public static final String PREF_USERNAME = "username";
 
     //Address
     public static final String LATITUDE = "latitude";

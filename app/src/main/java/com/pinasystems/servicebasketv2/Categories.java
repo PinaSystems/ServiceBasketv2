@@ -9,6 +9,16 @@ public class Categories {
     private String imageUrl;
     private String category;
 
+    public Integer getImagefile() {
+        return imagefile;
+    }
+
+    public void setImagefile(Integer imagefile) {
+        this.imagefile = imagefile;
+    }
+
+    private Integer imagefile;
+
     //Getters and Setters
     public String getImageUrl() {
         return imageUrl;
