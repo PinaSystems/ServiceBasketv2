@@ -196,5 +196,6 @@
         <item>Pricing received was high</item>
         <item>Found Service Provider externally</item>
     </string-array>
+    <string name="title_activity_chatbot">ChatbotActivity</string>
 
 </resources>
