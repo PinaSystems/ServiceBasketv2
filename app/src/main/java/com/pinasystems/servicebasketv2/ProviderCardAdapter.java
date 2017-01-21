@@ -1,6 +1,5 @@
 package com.pinasystems.servicebasketv2;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,20 +8,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by admin on 12/30/2016.
- */
+class ProviderCardAdapter extends RecyclerView.Adapter<ProviderCardAdapter.ViewHolder> {
 
-public class ProviderCardAdapter extends RecyclerView.Adapter<ProviderCardAdapter.ViewHolder> {
+    private List<Providers> providers;
 
-    private Context context;
-
-    List<Providers> providers;
-
-    public ProviderCardAdapter(List<Providers> provider, Context context){
+    ProviderCardAdapter(List<Providers> provider){
         super();
         this.providers = provider;
-        this.context = context;
     }
 
     @Override
@@ -50,9 +42,9 @@ public class ProviderCardAdapter extends RecyclerView.Adapter<ProviderCardAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView textViewDate , textViewName , textViewPrice , textViewrating;
+        TextView textViewDate , textViewName , textViewPrice , textViewrating;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             textViewDate= (TextView) itemView.findViewById(R.id.date);
             textViewName= (TextView) itemView.findViewById(R.id.name);

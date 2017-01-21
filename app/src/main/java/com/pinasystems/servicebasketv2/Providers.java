@@ -1,30 +1,27 @@
 package com.pinasystems.servicebasketv2;
 
-/**
- * Created by admin on 12/30/2016.
- */
 
-public class Providers {
-    String est_date;
-    String est_time;
-    String min_price;
-    String max_price;
-    String comment;
-    String rating;
+class Providers {
+    private String est_date;
+    private String est_time;
+    private String min_price;
+    private String max_price;
+    private String comment;
+    private String rating;
 
-    public String getRating() {
+    String getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    void setRating(String rating) {
         this.rating = rating;
     }
 
-    public String getComment() {
+    String getComment() {
         return comment;
     }
 
-    public void setComment(String comment) {
+    void setComment(String comment) {
         this.comment = comment;
     }
 
@@ -48,27 +45,27 @@ public class Providers {
 
     String name;
 
-    public String getEst_date() {
+    String getEst_date() {
         return est_date;
     }
 
-    public void setEst_date(String est_date) {
+    void setEst_date(String est_date) {
         this.est_date = est_date;
     }
 
-    public String getEst_time() {
+    String getEst_time() {
         return est_time;
     }
 
-    public void setEst_time(String est_time) {
+    void setEst_time(String est_time) {
         this.est_time = est_time;
     }
 
-    public String getMin_price() {
+    String getMin_price() {
         return min_price;
     }
 
-    public void setMin_price(String min_price) {
+    void setMin_price(String min_price) {
         this.min_price = min_price;
     }
 

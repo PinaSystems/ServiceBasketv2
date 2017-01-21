@@ -92,7 +92,7 @@ public class ViewProviderDetailsActivity extends AppCompatActivity {
     }
 
     private void parseData(JSONArray array) {
-        JSONObject json = null;
+        JSONObject json;
         try {
             json = array.getJSONObject(0);
             textViewtelno.setText(json.getString("telno"));

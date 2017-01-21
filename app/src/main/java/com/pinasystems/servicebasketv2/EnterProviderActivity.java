@@ -2,7 +2,6 @@ package com.pinasystems.servicebasketv2;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -78,7 +77,7 @@ public class EnterProviderActivity extends AppCompatActivity {
 
     public void addSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -98,7 +97,6 @@ public class EnterProviderActivity extends AppCompatActivity {
     public void setSubcategory() {
         Button buttonsubcategory = (Button) findViewById(R.id.buttonsubcategory);
         textViewsubcategory = (TextView) findViewById(R.id.textviewsubcategory);
-        final Context context = getApplicationContext();
         buttonsubcategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -232,8 +230,7 @@ public class EnterProviderActivity extends AppCompatActivity {
                 params.put(AppConfig.PINCODE,pincode);
                 params.put(AppConfig.USER_ID,userId);
                 Requesthandler rh = new Requesthandler();
-                String res = rh.sendPostRequest(AppConfig.SET_PROVIDER_DATA, params);
-                return res;
+                return rh.sendPostRequest(AppConfig.SET_PROVIDER_DATA, params);
             }
 
             @Override
@@ -267,8 +264,7 @@ public class EnterProviderActivity extends AppCompatActivity {
                 params.put(AppConfig.PROFILESTATUS,profile_status);
                 params.put(AppConfig.ACTION,action);
                 Requesthandler rh = new Requesthandler();
-                String res = rh.sendPostRequest(AppConfig.PROFILE_STATUS, params);
-                return res;
+                return rh.sendPostRequest(AppConfig.PROFILE_STATUS, params);
             }
 
             @Override
@@ -321,7 +317,7 @@ public class EnterProviderActivity extends AppCompatActivity {
 
     //This method will parse json data
     private void parseCategory(JSONArray array) {
-        JSONObject json = null;
+        JSONObject json;
         try {
             json = array.getJSONObject(0);
             categories = new ArrayList<>();
@@ -337,7 +333,7 @@ public class EnterProviderActivity extends AppCompatActivity {
     }
 
     private void parsesubCategory(JSONArray array) {
-        JSONObject json = null;
+        JSONObject json;
         try {
             json = array.getJSONObject(0);
             subcategories = json.getString(AppConfig.SUBCATEGORY);
@@ -385,7 +381,7 @@ public class EnterProviderActivity extends AppCompatActivity {
 
     //This method will parse json data
     private void parseStatesandCities(JSONObject object , boolean parsecities) {
-        JSONObject json = null;
+        JSONObject json;
         if(parsecities){
             try {
                 json = object;
@@ -421,7 +417,7 @@ public class EnterProviderActivity extends AppCompatActivity {
 
     public void addStatesSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.statesspinner);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, states);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, states);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -442,7 +438,7 @@ public class EnterProviderActivity extends AppCompatActivity {
 
     public void addCitiesSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.citiesspinner);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cities);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cities);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

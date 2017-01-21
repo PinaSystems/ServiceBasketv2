@@ -1,7 +1,6 @@
 package com.pinasystems.servicebasketv2;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,8 +25,6 @@ import java.util.List;
 public class FAQActivity extends AppCompatActivity {
 
     private RequestQueue requestQueue;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private List<FAQ> listfaq;
 
@@ -38,13 +35,12 @@ public class FAQActivity extends AppCompatActivity {
 
         //---------------------Card View ---------------------------------------------------------//
         listfaq = new ArrayList<>();
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter =new FAQCardAdapter(listfaq , this);
+        adapter =new FAQCardAdapter(listfaq);
         recyclerView.setAdapter(adapter);
-        Context context = getApplicationContext();
         requestQueue = Volley.newRequestQueue(this);
         getData();
     }
@@ -86,7 +82,7 @@ public class FAQActivity extends AppCompatActivity {
     private void parseData(JSONArray array){
         for(int i = 0; i<array.length(); i++) {
             FAQ faq = new FAQ();
-            JSONObject json = null;
+            JSONObject json;
             try {
                 json = array.getJSONObject( i);
                 faq.setQuestion(json.getString("question"));

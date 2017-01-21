@@ -1,6 +1,5 @@
 package com.pinasystems.servicebasketv2;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,21 +8,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by admin on 11/15/2016.
- */
 
-public class AddressCardAdapter extends RecyclerView.Adapter<AddressCardAdapter.ViewHolder> {
+class AddressCardAdapter extends RecyclerView.Adapter<AddressCardAdapter.ViewHolder> {
 
-    private Context context;
-
-    List<Addresses> addresses;
+    private List<Addresses> addresses;
 
 
-    public AddressCardAdapter(List<Addresses> addresses, Context context) {
+    AddressCardAdapter(List<Addresses> addresses) {
         super();
         this.addresses = addresses;
-        this.context = context;
     }
 
     @Override

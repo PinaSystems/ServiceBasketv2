@@ -26,8 +26,6 @@ import com.google.android.gms.ads.InterstitialAd;
 import java.util.HashMap;
 
 public class AccountActivity extends AppCompatActivity {
-    private RadioGroup radioGroup;
-    private RadioButton radioButton;
     private EditText editTextname,editTextfinalInfo;
     private String userId,account,name,profile_status,loginwith,finalinfo;
     private boolean loginwithemail;
@@ -135,9 +133,9 @@ public class AccountActivity extends AppCompatActivity {
 
     public void OnButton() {
 
-        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         int selected = radioGroup.getCheckedRadioButtonId();
-        radioButton = (RadioButton) findViewById(selected);
+        RadioButton radioButton = (RadioButton) findViewById(selected);
         if (radioButton != null) {
             String choice = radioButton.getText().toString();
             if (choice.equalsIgnoreCase("yes")) {
@@ -229,8 +227,7 @@ public class AccountActivity extends AppCompatActivity {
                 params.put(AppConfig.ACTION,loginwith);
 
                 Requesthandler rh = new Requesthandler();
-                String res = rh.sendPostRequest(AppConfig.SET_ACCOUNT_TYPE, params);
-                return res;
+                return rh.sendPostRequest(AppConfig.SET_ACCOUNT_TYPE, params);
             }
 
             @Override
@@ -291,8 +288,7 @@ public class AccountActivity extends AppCompatActivity {
                 params.put(AppConfig.PROFILESTATUS,profile_status);
                 params.put(AppConfig.ACTION,action);
                 Requesthandler rh = new Requesthandler();
-                String res = rh.sendPostRequest(AppConfig.PROFILE_STATUS, params);
-                return res;
+                return rh.sendPostRequest(AppConfig.PROFILE_STATUS, params);
             }
 
             @Override

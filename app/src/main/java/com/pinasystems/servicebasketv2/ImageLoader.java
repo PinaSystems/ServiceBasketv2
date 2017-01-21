@@ -20,26 +20,22 @@ import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by admin on 12/7/2016.
- */
 
+class ImageLoader {
 
-public class ImageLoader {
-
-    MemoryCache memoryCache = new MemoryCache();
-    FileCache fileCache;
+    private MemoryCache memoryCache = new MemoryCache();
+    private FileCache fileCache;
     private Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
-    ExecutorService executorService;
+    private ExecutorService executorService;
 
-    public ImageLoader(Context context) {
+    ImageLoader(Context context) {
         fileCache = new FileCache(context);
         executorService = Executors.newFixedThreadPool(5);
     }
 
-    int stub_id = R.drawable.loadingimg;
+    private int stub_id = R.drawable.loadingimg;
 
-    public void DisplayImage(String url, int loader, ImageView imageView) {
+    void DisplayImage(String url, int loader, ImageView imageView) {
         stub_id = loader;
         imageViews.put(imageView, url);
         Bitmap bitmap = memoryCache.get(url);
@@ -66,7 +62,7 @@ public class ImageLoader {
 
         //from web
         try {
-            Bitmap bitmap = null;
+            Bitmap bitmap;
             URL imageUrl = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
             conn.setConnectTimeout(30000);
@@ -108,7 +104,8 @@ public class ImageLoader {
             BitmapFactory.Options o2 = new BitmapFactory.Options();
             o2.inSampleSize = scale;
             return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ignored) {
+            ignored.printStackTrace();
         }
         return null;
     }
@@ -116,15 +113,15 @@ public class ImageLoader {
     //Task for the queue
     private class PhotoToLoad {
         public String url;
-        public ImageView imageView;
+        ImageView imageView;
 
-        public PhotoToLoad(String u, ImageView i) {
+        PhotoToLoad(String u, ImageView i) {
             url = u;
             imageView = i;
         }
     }
 
-    class PhotosLoader implements Runnable {
+    private class PhotosLoader implements Runnable {
         PhotoToLoad photoToLoad;
 
         PhotosLoader(PhotoToLoad photoToLoad) {
@@ -145,19 +142,17 @@ public class ImageLoader {
         }
     }
 
-    boolean imageViewReused(PhotoToLoad photoToLoad) {
+    private boolean imageViewReused(PhotoToLoad photoToLoad) {
         String tag = imageViews.get(photoToLoad.imageView);
-        if (tag == null || !tag.equals(photoToLoad.url))
-            return true;
-        return false;
+        return tag == null || !tag.equals(photoToLoad.url);
     }
 
     //Used to display bitmap in the UI thread
-    class BitmapDisplayer implements Runnable {
+    private class BitmapDisplayer implements Runnable {
         Bitmap bitmap;
         PhotoToLoad photoToLoad;
 
-        public BitmapDisplayer(Bitmap b, PhotoToLoad p) {
+        BitmapDisplayer(Bitmap b, PhotoToLoad p) {
             bitmap = b;
             photoToLoad = p;
         }
@@ -170,10 +165,5 @@ public class ImageLoader {
             else
                 photoToLoad.imageView.setImageResource(stub_id);
         }
-    }
-
-    public void clearCache() {
-        memoryCache.clear();
-        fileCache.clear();
     }
 }

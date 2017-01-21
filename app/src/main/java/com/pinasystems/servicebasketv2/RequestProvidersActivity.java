@@ -26,8 +26,6 @@ import java.util.List;
 
 public class RequestProvidersActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private List<Providers> listproviders;
     String URL;
@@ -41,12 +39,12 @@ public class RequestProvidersActivity extends AppCompatActivity {
         URL = AppConfig.ROOT_URL + "getproviders.php?id="+reqid;
 
         //---------------------Card View ---------------------------------------------------------//
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         listproviders = new ArrayList<>();
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter =new ProviderCardAdapter(listproviders , this);
+        adapter =new ProviderCardAdapter(listproviders);
         recyclerView.setAdapter(adapter);
         Context context = getApplicationContext();
         recyclerView.addOnItemTouchListener(
@@ -107,7 +105,7 @@ public class RequestProvidersActivity extends AppCompatActivity {
     private void parseData(JSONArray array){
         for(int i = 0; i<array.length(); i++) {
             Providers provider = new Providers();
-            JSONObject json = null;
+            JSONObject json;
             try {
                 json = array.getJSONObject( i);
                 provider.setEst_date(json.getString("est_date"));

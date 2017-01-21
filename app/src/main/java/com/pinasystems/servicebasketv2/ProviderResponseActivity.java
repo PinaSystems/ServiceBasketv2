@@ -53,7 +53,6 @@ public class ProviderResponseActivity extends AppCompatActivity {
     TextView textViewprovdate;
     TextView textViewprovtime, textViewuploads;
     EditText editTextminprice, editTextmaxprice,editTextcomment;
-    private Calendar calendar;
     private int year, month, day;
     String request_id;
     Button btnacceptrequest;
@@ -80,7 +79,7 @@ public class ProviderResponseActivity extends AppCompatActivity {
         textViewdate = (TextView) findViewById(R.id.date);
         textViewcity = (TextView) findViewById(R.id.city);
         textViewprovdate = (TextView) findViewById(R.id.provdate);
-        calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
 
         month = calendar.get(Calendar.MONTH);
@@ -171,7 +170,7 @@ public class ProviderResponseActivity extends AppCompatActivity {
     String video_url,address;
 
     private void Jsondata(JSONArray response) {
-        JSONObject json = null;
+        JSONObject json;
         try {
             json = response.getJSONObject(0);
             textViewaddress.setText(json.getString(AppConfig.ADDRESS));
@@ -251,7 +250,6 @@ public class ProviderResponseActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     @Override
     protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
         if (id == 999) {
             return new DatePickerDialog(this,
                     myDateListener, year, month, day);
@@ -273,7 +271,6 @@ public class ProviderResponseActivity extends AppCompatActivity {
                 @Override
                 public void onDateSet(DatePicker arg0,
                                       int arg1, int arg2, int arg3) {
-                    // TODO Auto-generated method stub
                     // arg1 = year
                     // arg2 = month
                     // arg3 = day

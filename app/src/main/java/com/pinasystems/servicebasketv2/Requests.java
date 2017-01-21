@@ -1,9 +1,6 @@
 package com.pinasystems.servicebasketv2;
 
-/**
- * Created by admin on 11/2/2016.
- */
-public class Requests {
+class Requests {
     //Data Variables
     private String name;
     private String date;
@@ -37,11 +34,11 @@ public class Requests {
         this.subcategory = subcategory;
     }
 
-    public String getReqid() {
+    String getReqid() {
         return reqid;
     }
 
-    public void setReqid(String reqid) {
+    void setReqid(String reqid) {
         this.reqid = reqid;
     }
 

@@ -97,7 +97,7 @@ public class RequestClosedActivity extends AppCompatActivity {
             for (int j = 0; j < jsonArray.length(); j++) {
                 providers.add(((String) jsonArray.get(j)));
             }
-            Log.e("IDARRAY",id.toString());
+            Log.e("IDARRAY", id);
 
             addSpinner(providers);
         } catch (JSONException e) {
@@ -111,7 +111,7 @@ public class RequestClosedActivity extends AppCompatActivity {
 
     public void addSpinner(ArrayList<String> providers) {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, providers);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, providers);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

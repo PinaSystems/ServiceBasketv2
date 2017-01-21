@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -28,6 +30,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,17 +45,17 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ProviderMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,GoogleApiClient.ConnectionCallbacks {
 
     private RequestQueue requestQueue;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private List<Requests> listrequests;
-
+    private GoogleApiClient mGoogleApiClient;
 
     String user_Id;
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_provider_main);
@@ -56,6 +63,12 @@ public class ProviderMainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         user_Id = ((DataBank)getApplication()).getUserId();
         getDataFromMemory();
+
+        //For Google sign out
+        if(auth.equalsIgnoreCase("google")){
+            connectGoogleApiClient();
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -84,11 +97,11 @@ public class ProviderMainActivity extends AppCompatActivity
 
         //---------------------Card View ---------------------------------------------------------//
         listrequests = new ArrayList<>();
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter =new RequestCardAdapter(listrequests , this);
+        adapter =new RequestCardAdapter(listrequests);
         recyclerView.setAdapter(adapter);
         Context context = getApplicationContext();
         recyclerView.addOnItemTouchListener(
@@ -105,6 +118,23 @@ public class ProviderMainActivity extends AppCompatActivity
         getData();
     }
 
+    //========================Google API client
+
+    protected synchronized void connectGoogleApiClient(){
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        connectionResult.getErrorMessage();
+                    }
+                })
+                .addConnectionCallbacks(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -117,7 +147,7 @@ public class ProviderMainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -153,6 +183,7 @@ public class ProviderMainActivity extends AppCompatActivity
     }
     //================================Log out =====================================================//
 
+
     private void logoutDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Log out");
@@ -160,6 +191,12 @@ public class ProviderMainActivity extends AppCompatActivity
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                if (auth.equalsIgnoreCase("google")) {
+                    if (mGoogleApiClient.isConnected()) {
+                        signOut();
+                    }
+                }
+
                 loginStatus(false);
             }
         });
@@ -174,6 +211,18 @@ public class ProviderMainActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+    private void signOut() {
+
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        mGoogleApiClient.disconnect();
+                    }
+                });
+    }
+
+
     private void loginStatus(boolean isloggedin) {
         SharedPreferences.Editor editor = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putBoolean(AppConfig.PREF_LOGIN_STATUS, isloggedin);
@@ -183,11 +232,16 @@ public class ProviderMainActivity extends AppCompatActivity
         finish();
     }
 
-    //================================= Get Subcategory ===========================================//
+
+
+    //============================== Get Data From Memory(SharedPref) =============================//
+
+    String auth;
 
     private void getDataFromMemory(){
         SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
         subcategory = sharedPreferences.getString(AppConfig.PREF_SUBCATEGORY,"No subCategory");
+        auth = sharedPreferences.getString("AUTH","static");
     }
 
 
@@ -234,7 +288,7 @@ public class ProviderMainActivity extends AppCompatActivity
     private void parseData(JSONArray array){
         for(int i = 0; i<array.length(); i++) {
             Requests request = new Requests();
-            JSONObject json = null;
+            JSONObject json;
             try {
                 json = array.getJSONObject( i);
                 request.setSubcategory(json.getString(AppConfig.CATEGORY) + " / " + json.getString(AppConfig.SUBCATEGORY));
@@ -248,5 +302,17 @@ public class ProviderMainActivity extends AppCompatActivity
             listrequests.add(request);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    //---------------Google API Client Methods
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Toast.makeText(getApplicationContext(),"Client Connected",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 }

@@ -13,33 +13,32 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/google_maps_key" />
 
     <application
         android:name=".DataBank"
         android:allowBackup="true"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/sb_app_icon"
+        android:fullBackupContent="false"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".StartActivity"
+            android:name=".SplashScreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="Welcome to Service Basket"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".RequesterMainActivity"
             android:label="@string/title_activity_requester_main"
@@ -56,46 +55,61 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".EnterProviderActivity"
+            android:label="Service Provider"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".NewRequestActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".UploadsActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".AddressMapsActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".GetAddressDetailsActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".SavedAddressesActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ProviderResponseActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".PreviewMediaActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".AddressOnMapActivity"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".PreviousRequestsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MyRequestsDetailsActivity" />
-        <activity android:name=".RequestClosedActivity" />
-        <activity android:name=".RequestProvidersActivity" />
-        <activity android:name=".ViewProviderDetailsActivity" />
+        <activity android:name=".MyRequestsDetailsActivity"
+            android:label="@string/app_name"/>
+        <activity android:name=".RequestClosedActivity"
+            android:label="@string/app_name"/>
+        <activity android:name=".RequestProvidersActivity"
+            android:label="@string/app_name"/>
+        <activity android:name=".ViewProviderDetailsActivity"
+            android:label="@string/app_name"/>
 
-        <service android:name=".FirebaseInstanceIDService">
+        <service android:name=".FirebaseInstanceIDService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".FirebaseMessageService">
+        <service android:name=".FirebaseMessageService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -105,8 +119,20 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".FAQActivity" />
-        <activity android:name=".AppFeedbackActivity" />
+        <!--<meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+            -->
+
+        <activity android:name=".FAQActivity"
+            android:label="@string/app_name"/>
+        <activity android:name=".AppFeedbackActivity"
+            android:label="Thank You"/>
+
+        <!--<activity android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        -->
     </application>
 
 </manifest>

@@ -7,11 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by admin on 12/7/2016.
- */
 
-public class MemoryCache {
+class MemoryCache {
     private Map<String, SoftReference<Bitmap>> cache= Collections.synchronizedMap(new HashMap<String, SoftReference<Bitmap>>());
 
     public Bitmap get(String id){
@@ -22,10 +19,7 @@ public class MemoryCache {
     }
 
     public void put(String id, Bitmap bitmap){
-        cache.put(id, new SoftReference<Bitmap>(bitmap));
+        cache.put(id, new SoftReference<>(bitmap));
     }
 
-    public void clear() {
-        cache.clear();
-    }
 }

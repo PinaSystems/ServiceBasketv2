@@ -3,12 +3,8 @@ package com.pinasystems.servicebasketv2;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- * Created by admin on 12/7/2016.
- */
-
-public class Utils {
-    public static void CopyStream(InputStream is, OutputStream os)
+class Utils {
+    static void CopyStream(InputStream is, OutputStream os)
     {
         final int buffer_size=1024;
         try
@@ -22,6 +18,8 @@ public class Utils {
                 os.write(bytes, 0, count);
             }
         }
-        catch(Exception ex){}
+        catch(Exception ignored){
+            ignored.printStackTrace();
+        }
     }
 }

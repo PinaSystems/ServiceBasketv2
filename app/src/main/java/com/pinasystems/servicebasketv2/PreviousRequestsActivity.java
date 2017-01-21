@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources.Theme;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,8 +39,6 @@ public class PreviousRequestsActivity extends AppCompatActivity {
 
     int request_status;
     String user_id;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private List<PrevRequests> listrequests;
 
@@ -69,7 +68,6 @@ public class PreviousRequestsActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // When the given dropdown item is selected, show its contents in the
                 // container view.
-                //TODO URL and refetch data + clear adapter data
                 listrequests.clear();
                 if(position == 0){
                     request_status = 0;
@@ -95,11 +93,11 @@ public class PreviousRequestsActivity extends AppCompatActivity {
         });
 
         //---------------------Card View ---------------------------------------------------------//
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter =new PrevRequestCardAdapter(listrequests , this);
+        adapter =new PrevRequestCardAdapter(listrequests);
         recyclerView.setAdapter(adapter);
         Context context = getApplicationContext();
         recyclerView.addOnItemTouchListener(
@@ -117,13 +115,13 @@ public class PreviousRequestsActivity extends AppCompatActivity {
     private static class MyAdapter extends ArrayAdapter<String> implements ThemedSpinnerAdapter {
         private final ThemedSpinnerAdapter.Helper mDropDownHelper;
 
-        public MyAdapter(Context context, String[] objects) {
+        MyAdapter(Context context, String[] objects) {
             super(context, android.R.layout.simple_list_item_1, objects);
             mDropDownHelper = new ThemedSpinnerAdapter.Helper(context);
         }
 
         @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
             View view;
 
             if (convertView == null) {
@@ -189,7 +187,7 @@ public class PreviousRequestsActivity extends AppCompatActivity {
     private void parseData(JSONArray array){
         for(int i = 0; i<array.length(); i++) {
             PrevRequests request = new PrevRequests();
-            JSONObject json = null;
+            JSONObject json;
             try {
                 json = array.getJSONObject(i);
                 request.setSubcategory(json.getString(AppConfig.CATEGORY) + " / " + json.getString(AppConfig.SUBCATEGORY));

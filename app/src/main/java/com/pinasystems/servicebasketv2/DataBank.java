@@ -2,6 +2,9 @@ package com.pinasystems.servicebasketv2;
 
 import android.support.multidex.MultiDexApplication;
 
+//import com.facebook.FacebookSdk;
+//import com.facebook.appevents.AppEventsLogger;
+
 public class DataBank extends MultiDexApplication {
 
     public String getCategory() {
@@ -74,15 +77,7 @@ public class DataBank extends MultiDexApplication {
 
     String Long;
 
-    public String getSubCategory() {
-        return subCategory;
-    }
-
-    public void setSubCategory(String subCategory) {
-        this.subCategory = subCategory;
-    }
-
-    String subCategory;
+    String subcategory;
 
     public String getAccount() {
         return account;
@@ -122,4 +117,13 @@ public class DataBank extends MultiDexApplication {
     }
 
     String name ;
+
+    /*@Override
+    public void onCreate() {
+        super.onCreate();
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+    }
+    */
 }

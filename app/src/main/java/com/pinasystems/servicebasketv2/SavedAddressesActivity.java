@@ -33,9 +33,6 @@ public class SavedAddressesActivity extends AppCompatActivity {
 
     private List<Addresses> addressesList;
 
-    //Creating Views
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
 
     String userId;
@@ -47,12 +44,12 @@ public class SavedAddressesActivity extends AppCompatActivity {
         addressesList = new ArrayList<>();
         userId = ((DataBank)getApplication()).getUserId();
         Log.e("USERID",userId);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         //Finally initializing our adapter
-        adapter = new AddressCardAdapter(addressesList, this);
+        adapter = new AddressCardAdapter(addressesList);
 
         //Adding adapter to recyclerview
         recyclerView.setAdapter(adapter);
@@ -127,7 +124,7 @@ public class SavedAddressesActivity extends AppCompatActivity {
     private void parseData(JSONArray array) {
         for (int i = 0; i < array.length(); i++) {
             Addresses address = new Addresses();
-            JSONObject json = null;
+            JSONObject json;
             try {
                 json = array.getJSONObject(i);
                 address.setLabel(json.getString(AppConfig.ADDRESS_LABEL));
