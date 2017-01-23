@@ -20,6 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +42,12 @@ public class MyRequestsDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         reqid = intent.getStringExtra("reqid");
         getRequestData(reqid);
+
+        // Load an ad into the AdMob banner view.
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        adView.loadAd(adRequest);
 
         Button buttonchangestatus = (Button) findViewById(R.id.changestatus);
         buttonchangestatus.setOnClickListener(new View.OnClickListener() {
