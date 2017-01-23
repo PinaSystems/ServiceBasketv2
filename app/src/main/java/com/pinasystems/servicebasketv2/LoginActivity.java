@@ -11,14 +11,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -41,6 +39,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,19 +56,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.Manifest.permission.READ_CONTACTS;
+/*import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+*/
+/*import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+*/
+
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
 
-    // UI references.
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -72,13 +89,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private String URL;
     boolean islogin;
     String loginid;
+  
+    GoogleApiClient mGoogleApiClient;
+   // private FirebaseAuth mAuth;
+    //private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
-        populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
 
@@ -133,6 +153,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+       // facebookLogin();
         // Load an ad into the AdMob banner view.
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
@@ -140,8 +161,194 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         adView.loadAd(adRequest);
 
         Initialize();
+
+        //Google Sign in
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestId()
+                .requestIdToken(getString(R.string.server_client_id))
+                .requestProfile()
+                .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        connectionResult.getErrorMessage();
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                .build();
+
+        SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
+        signInButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                googlePlusSignIn();
+            }
+        });
+
+        // Initialize Firebase Auth
+        /**mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG,"signed_as:");
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+         */
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        //mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        /**if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+         */
+    }
+
+    int RC_SIGN_IN = 111;
+
+    private void googlePlusSignIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d("TAG", "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            if (acct != null) {
+                Log.d("Email",acct.getEmail());
+                Log.d("Token Id",acct.getIdToken());
+                googleLogin(acct.getEmail(),acct.getIdToken());
+            }
+        } else {
+            // Signed out, show unauthenticated UI.
+            Toast.makeText(getApplicationContext(),"Login unsuccessful",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    String auth = "static";
+
+    private void googleLogin(String email , String token_id){
+        showProgress(true);
+        final String uEmail = email;
+        final String uToken = token_id;
+        String GOOGLE_LOGIN_URL = AppConfig.ROOT_URL + "googlepluslogin.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GOOGLE_LOGIN_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                ((DataBank)getApplication()).setTag(loginwith);
+                loginid = uEmail;
+                auth = "google";
+                extractJSON(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }){
+            @Override
+            protected HashMap<String , String > getParams() throws AuthFailureError {
+                HashMap<String , String > param = new HashMap<>();
+                param.put("email",uEmail);
+                param.put("id",uToken);
+                return param;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+   // CallbackManager mCallbackManager;
+
+    /*private void facebookLogin() {
+        // Initialize Facebook Login button
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
+        loginButton.setReadPermissions(Arrays.asList("email", "public_profile"));
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("TAG", "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("TAG", "facebook:onCancel");
+                Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                error.printStackTrace();
+            }
+        });
+    }
+     */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
+        /**else{
+            // Pass the activity result back to the Facebook SDK
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }*/
+    }
+
+    /*
+      private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
+        Log.d(TAG,token.getUserId());
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+    */
     private void Initialize() {
         SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
         String restoredText = sharedPreferences.getString(AppConfig.PREF_DATA, null);
@@ -242,50 +449,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Dialog messagedialog = builder.create();
         messagedialog.show();
     }
-
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mUsernameView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -478,6 +641,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onResponse(String response) {
                         //If we are getting success from server
+                        auth = "static";
                         ((DataBank)getApplication()).setTag(loginwith);
                         extractJSON(response);
                     }
@@ -521,23 +685,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     String subcategory;
     private void parseData(JSONArray array) {
-        JSONObject json = null;
+        JSONObject json;
         try {
             json = array.getJSONObject(0);
 
             String userId = json.getString(AppConfig.USER_ID);
-            Log.i("ID",userId);
             ((DataBank)getApplication()).setUserId(userId);
 
             String account = json.getString(AppConfig.ACCOUNT);
             ((DataBank)getApplication()).setAccount(account);
-            Log.i("ACCOUNT",account);
 
             if(account.equalsIgnoreCase("provider")){
                 subcategory = json.getString(AppConfig.SUBCATEGORY);
             }else{
                 subcategory = "requester only";
             }
+
             if (userId.equalsIgnoreCase("Error")) {
                 MessageDialog(account);
                 showProgress(false);
@@ -548,6 +711,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 storeToken(fcm_token,userId);
                 nextActivity(account, userId);
             }
+
             if(islogin){
                 if(!TextUtils.isEmpty(json.getString("email"))){
                     ((DataBank)getApplication()).setEmail(json.getString("email"));
@@ -618,17 +782,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         storeDataInMemory(account, userId);
         showProgress(false);
         if(account.equalsIgnoreCase("provider")){
-            Toast.makeText(getApplicationContext(),"Data Stored",Toast.LENGTH_LONG).show();
             CheckProfileStatus(userId);
         }else{
             if(account.equalsIgnoreCase("requester")){
-                Toast.makeText(getApplicationContext(),"Data Stored",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(),RequesterMainActivity.class);
                 startActivity(intent);
                 finish();
             }else{
                 if(account.equalsIgnoreCase("new")){
-                    Toast.makeText(getApplicationContext(),"Data Stored",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent (getApplicationContext(),AccountActivity.class);
                     startActivity(intent);
                     finish();
@@ -647,12 +808,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         editor.putBoolean(AppConfig.PREF_LOGIN_STATUS,true);
         editor.putString(AppConfig.PREF_TEMP,loginwith);
         editor.putString(AppConfig.PREF_SUBCATEGORY,subcategory);
+        editor.putString("AUTH",auth);
         editor.apply();
     }
 
     private void CheckProfileStatus(final String userId){
         final String action = "read";
-        final String uUserId = userId;
+        final String uUserId;
+        uUserId = userId;
         StringRequest stringRequest = new StringRequest(Request.Method.POST,AppConfig.PROFILE_STATUS,
                 new Response.Listener<String>() {
                     @Override

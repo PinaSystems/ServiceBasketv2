@@ -1,18 +1,14 @@
 package com.pinasystems.servicebasketv2;
 
-/**
- * Created by admin on 11/15/2016.
- */
-
-public class Addresses {
+class Addresses {
 
     private String label,address;
 
-    public String getLabel() {
+    String getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    void setLabel(String label) {
         this.label = label;
     }
 

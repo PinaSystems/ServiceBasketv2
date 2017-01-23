@@ -92,7 +92,7 @@ public class UploadsActivity extends AppCompatActivity {
                 build = new android.support.v7.app.NotificationCompat.Builder(getApplicationContext());
                 build.setContentTitle("Service Basket")
                         .setContentText("Upload in progress")
-                        .setSmallIcon(R.drawable.upload_arrow);
+                        .setSmallIcon(R.drawable.sb_app_icon);
 
                 new UploadVideo().execute();
 
@@ -172,14 +172,8 @@ public class UploadsActivity extends AppCompatActivity {
     }
 
     private boolean isDeviceSupportCamera() {
-        if (getApplicationContext().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
+        return getApplicationContext().getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA);
     }
 
     private void chooseImage() {
@@ -475,8 +469,8 @@ public class UploadsActivity extends AppCompatActivity {
                 BufferedInputStream bufInput = new BufferedInputStream(new FileInputStream(sourceFile));
                 URL url = new URL(FILE_UPLOAD_URL);
 
-                HttpURLConnection conn = null;
-                DataOutputStream dos = null;
+                HttpURLConnection conn;
+                DataOutputStream dos;
                 String lineEnd = "\r\n";
                 String twoHyphens = "--";
                 String boundary = "*****";

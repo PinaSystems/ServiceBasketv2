@@ -18,10 +18,11 @@ import javax.net.ssl.HttpsURLConnection;
  *
  * COMMON REQUEST HANDLER FILE FOR COMMUNICATING WITH SERVER
  */
-public class Requesthandler {
 
-    public String sendPostRequest(String requestURL,
-                                  HashMap<String, String> postDataParams) {
+class Requesthandler {
+
+    String sendPostRequest(String requestURL,
+                           HashMap<String, String> postDataParams) {
         //Creating a URL
         URL url;
 
@@ -68,38 +69,6 @@ public class Requesthandler {
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return sb.toString();
-    }
-
-    public String sendGetRequest(String requestURL){
-        StringBuilder sb =new StringBuilder();
-        try {
-            URL url = new URL(requestURL);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-            String s;
-            while((s=bufferedReader.readLine())!=null){
-                sb.append(s+"\n");
-            }
-        }catch(Exception e){
-        }
-        return sb.toString();
-    }
-
-    public String sendGetRequestParam(String requestURL, String id){
-        StringBuilder sb =new StringBuilder();
-        try {
-            URL url = new URL(requestURL+id);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-            String s;
-            while((s=bufferedReader.readLine())!=null){
-                sb.append(s+"\n");
-            }
-        }catch(Exception e){
         }
         return sb.toString();
     }

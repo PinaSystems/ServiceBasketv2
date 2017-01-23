@@ -1,32 +1,27 @@
 package com.pinasystems.servicebasketv2;
 
-/**
- * Created by admin on 11/8/2016.
- */
 
-public class Categories {
-    //Data Variables
-    private String imageUrl;
-    private String category;
-
-    public Integer getImagefile() {
+ class Categories {
+    int getImagefile() {
         return imagefile;
     }
 
-    public void setImagefile(Integer imagefile) {
+    void setImagefile(int imagefile) {
         this.imagefile = imagefile;
     }
 
-    private Integer imagefile;
+    //Data Variables
+    private int imagefile;
 
-    //Getters and Setters
-    public String getImageUrl() {
-        return imageUrl;
+    public String getDescription() {
+        return description;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setDescription(String description) {
+        this.description = description;
     }
+
+    private String description;
 
     public String getCategory() {
         return category;
@@ -35,4 +30,6 @@ public class Categories {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    private String category;
 }

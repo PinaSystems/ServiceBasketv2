@@ -50,8 +50,10 @@ import java.util.Map;
 public class NewRequestActivity extends AppCompatActivity {
 
 
-    private Calendar calendar;
-    private TextView dateView, textViewaddresslabel, textViewaddress, textViewcity, textViewpincode;
+    private TextView dateView;
+    private TextView textViewaddress;
+    private TextView textViewcity;
+    private TextView textViewpincode;
     private int year, month, day;
     private Button btnsetdateandtime;
     String category;
@@ -75,9 +77,8 @@ public class NewRequestActivity extends AppCompatActivity {
         Log.w("Category", category);
         getDatafromMemory();
         userid = ((DataBank) getApplication()).getUserId();
-        ((DataBank) getApplication()).setCategory(category);
         dateView = (TextView) findViewById(R.id.date_selected);
-        calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
 
         month = calendar.get(Calendar.MONTH);
@@ -160,7 +161,7 @@ public class NewRequestActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
         String pref_address = sharedPreferences.getString(AppConfig.PREF_ADDRESS_LABEL, null);
         textViewaddress = (TextView) findViewById(R.id.address);
-        textViewaddresslabel = (TextView) findViewById(R.id.addresslabel);
+        TextView textViewaddresslabel = (TextView) findViewById(R.id.addresslabel);
         textViewcity = (TextView) findViewById(R.id.city);
         textViewpincode = (TextView) findViewById(R.id.pincode);
         if (pref_address != null) {
@@ -258,7 +259,6 @@ public class NewRequestActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     @Override
     protected Dialog onCreateDialog(int id) {
-        // TODO Auto-generated method stub
         if (id == 999) {
             return new DatePickerDialog(this,
                     myDateListener, year, month, day);
@@ -281,7 +281,6 @@ public class NewRequestActivity extends AppCompatActivity {
                 @Override
                 public void onDateSet(DatePicker arg0,
                                       int arg1, int arg2, int arg3) {
-                    // TODO Auto-generated method stub
                     // arg1 = year
                     // arg2 = month
                     // arg3 = day
@@ -382,7 +381,7 @@ public class NewRequestActivity extends AppCompatActivity {
 
     public void addSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subcategories);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, subcategories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

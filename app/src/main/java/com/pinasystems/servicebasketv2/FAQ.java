@@ -1,25 +1,22 @@
 package com.pinasystems.servicebasketv2;
 
-/**
- * Created by admin on 1/9/2017.
- */
 
-public class FAQ {
-    String question , answer;
+class FAQ {
+    private String question , answer;
 
-    public String getAnswer() {
+    String getAnswer() {
         return answer;
     }
 
-    public void setAnswer(String answer) {
+    void setAnswer(String answer) {
         this.answer = answer;
     }
 
-    public String getQuestion() {
+    String getQuestion() {
         return question;
     }
 
-    public void setQuestion(String question) {
+    void setQuestion(String question) {
         this.question = question;
     }
 }

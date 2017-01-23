@@ -1,6 +1,5 @@
 package com.pinasystems.servicebasketv2;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,20 +8,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by admin on 1/9/2017.
- */
 
-public class FAQCardAdapter extends RecyclerView.Adapter<FAQCardAdapter.ViewHolder> {
+class FAQCardAdapter extends RecyclerView.Adapter<FAQCardAdapter.ViewHolder> {
 
-    private Context context;
+    private List<FAQ> faqs;
 
-    List<FAQ> faqs;
-
-    public FAQCardAdapter(List<FAQ> faqs, Context context) {
+    FAQCardAdapter(List<FAQ> faqs) {
         super();
         this.faqs = faqs;
-        this.context = context;
     }
 
     @Override

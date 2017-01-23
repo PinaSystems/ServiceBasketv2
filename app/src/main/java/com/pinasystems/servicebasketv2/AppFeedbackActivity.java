@@ -19,6 +19,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.HashMap;
 
 public class AppFeedbackActivity extends AppCompatActivity {
@@ -29,6 +32,12 @@ public class AppFeedbackActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_feedback);
+      
+        // Load an ad into the AdMob banner view.
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        adView.loadAd(adRequest);
 
         Intent intent = getIntent();
         isreqeuster = intent.getBooleanExtra("isrequester",true);

@@ -1,6 +1,6 @@
 package com.pinasystems.servicebasketv2;
 /**
- * CONSTRUCTOR CLASS FOR JSONARRAYREQUEST
+ * CONSTRUCTOR CLASS FOR JSON ARRAY REQUEST
  */
 
 
@@ -18,20 +18,13 @@ import org.json.JSONException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-public class PostJsonRequest extends Request<JSONArray> {
+class PostJsonRequest extends Request<JSONArray> {
 
     private Listener<JSONArray> listener;
     private Map<String, String> params;
 
-    public PostJsonRequest(String url, Map<String, String> params,
-                           Listener<JSONArray> reponseListener, ErrorListener errorListener) {
-        super(Method.GET, url, errorListener);
-        this.listener = reponseListener;
-        this.params = params;
-    }
-
-    public PostJsonRequest(int method, String url, Map<String, String> params,
-                           Listener<JSONArray> reponseListener, ErrorListener errorListener) {
+    PostJsonRequest(int method, String url, Map<String, String> params,
+                    Listener<JSONArray> reponseListener, ErrorListener errorListener) {
         super(method, url, errorListener);
         this.listener = reponseListener;
         this.params = params;

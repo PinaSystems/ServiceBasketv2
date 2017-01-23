@@ -16,7 +16,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="5dp"
-        android:src="@drawable/sbv2_icon" />
+        android:src="@drawable/sb_app_icon" />
 
     <TextView
         android:layout_width="match_parent"

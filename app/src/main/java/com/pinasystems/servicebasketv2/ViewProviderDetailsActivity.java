@@ -13,6 +13,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +31,13 @@ public class ViewProviderDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_provider_details);
+
+        // Load an ad into the AdMob banner view.
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        adView.loadAd(adRequest);
+
         textViewaddress = (TextView) findViewById(R.id.address);
         textViewcity = (TextView) findViewById(R.id.city);
         textViewcomment = (TextView) findViewById(R.id.comment);
@@ -92,7 +101,7 @@ public class ViewProviderDetailsActivity extends AppCompatActivity {
     }
 
     private void parseData(JSONArray array) {
-        JSONObject json = null;
+        JSONObject json;
         try {
             json = array.getJSONObject(0);
             textViewtelno.setText(json.getString("telno"));

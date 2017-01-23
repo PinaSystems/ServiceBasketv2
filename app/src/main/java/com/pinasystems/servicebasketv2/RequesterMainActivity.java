@@ -1,12 +1,12 @@
 package com.pinasystems.servicebasketv2;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,31 +20,26 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RequesterMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,GoogleApiClient.ConnectionCallbacks {
 
     private List<Categories> categoriesList;
 
-    //Creating Views
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,12 +70,12 @@ public class RequesterMainActivity extends AppCompatActivity
 
         categoriesList = new ArrayList<>();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         //Finally initializing our adapter
-        adapter = new CategoryCardAdapter(categoriesList, this);
+        adapter = new CategoryCardAdapter(categoriesList);
 
         //Adding adapter to recyclerview
         recyclerView.setAdapter(adapter);
@@ -104,8 +99,40 @@ public class RequesterMainActivity extends AppCompatActivity
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
+
+        getDataFromMemory();
+
+        //For Google sign out
+        if(auth.equalsIgnoreCase("google")){
+            connectGoogleApiClient();
+        }
+
+    }
+    String auth;
+
+    //========================Google API client
+
+    protected synchronized void connectGoogleApiClient(){
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        connectionResult.getErrorMessage();
+                    }
+                })
+                .addConnectionCallbacks(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
+        mGoogleApiClient.connect();
     }
 
+    //============================== Get Data From Memory(SharedPref) =============================//
+
+    private void getDataFromMemory(){
+        SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
+        auth = sharedPreferences.getString("AUTH","static");
+    }
+    //=========================== On Back pressed ================================================//
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -161,6 +188,12 @@ public class RequesterMainActivity extends AppCompatActivity
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                if (auth.equalsIgnoreCase("google")) {
+                    if (mGoogleApiClient.isConnected()) {
+                        signOut();
+                    }
+                }
+
                 loginStatus(false);
             }
         });
@@ -175,6 +208,18 @@ public class RequesterMainActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+    private void signOut() {
+
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        mGoogleApiClient.disconnect();
+                    }
+                });
+    }
+
+
     private void loginStatus(boolean isloggedin) {
         SharedPreferences.Editor editor = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putBoolean(AppConfig.PREF_LOGIN_STATUS, isloggedin);
@@ -187,52 +232,40 @@ public class RequesterMainActivity extends AppCompatActivity
 //-------------------------------------------------------------------------------------------------//
 
 
+    private int [] imagefiles = {R.drawable.category_cleaning, R.drawable.category_beauty,
+            R.drawable.category_finance, R.drawable.category_travel};
+
+    String cleaning = "-> Car \n-> Carpet \n-> Home \n-> Appliances\n & more";
+    String beauty = "-> Bleaching \n-> Facial \n-> Cleanup \n-> Hair-Care\n & more";
+    String finance = "-> Tax \n-> Financial Planner \n-> Insurance";
+    String travel = "-> Agents \n-> Tours \n-> Driver \n-> Cab or Auto";
+    private String [] categorydesc = {cleaning , beauty , finance , travel};
+
+    private String [] categorynames = {"Cleaning","Beauty","Finance","Travel"};
+
     private void getData(){
-        //Showing a progress dialog
-        final ProgressDialog loading = ProgressDialog.show(this,"Loading Data", "Please wait...",false,false);
+        int j = 0;
+        for (int image: imagefiles) {
+            Categories categories = new Categories();
+            categories.setImagefile(image);
+            categories.setDescription(categorydesc[j]);
+            categories.setCategory(categorynames[j]);
+            j = j + 1;
+            categoriesList.add(categories);
+        }
 
-        //Creating a json array request
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(AppConfig.GET_CATEGORIES,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        //Dismissing progress dialog
-                        loading.dismiss();
-
-                        //calling method to parse json array
-                        parseData(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        loading.dismiss();
-                    }
-                });
-
-        //Creating request queue
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        //Adding request to the queue
-        requestQueue.add(jsonArrayRequest);
+        adapter.notifyDataSetChanged();
     }
 
-    //This method will parse json data
-    private void parseData(JSONArray array) {
-        for (int i = 0; i < array.length(); i++) {
-            Categories category = new Categories();
-            JSONObject json = null;
-            try {
-                json = array.getJSONObject(i);
-                category.setImageUrl(json.getString(AppConfig.IMAGE_URL));
-                category.setCategory(json.getString(AppConfig.CATEGORY));
-            } catch (JSONException e) {
-                Log.e("JSON",e.getMessage());
-                e.printStackTrace();
-            }
-            categoriesList.add(category);
-        }
-        adapter.notifyDataSetChanged();
+    //---------------Google API Client Methods
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Toast.makeText(getApplicationContext(),"Client Connected",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 }

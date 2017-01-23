@@ -1,7 +1,6 @@
 package com.pinasystems.servicebasketv2;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +14,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,8 +27,6 @@ import java.util.List;
 public class FAQActivity extends AppCompatActivity {
 
     private RequestQueue requestQueue;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private List<FAQ> listfaq;
 
@@ -36,15 +35,20 @@ public class FAQActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq);
 
+        // Load an ad into the AdMob banner view.
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template").build();
+        adView.loadAd(adRequest);
+
         //---------------------Card View ---------------------------------------------------------//
         listfaq = new ArrayList<>();
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter =new FAQCardAdapter(listfaq , this);
+        adapter =new FAQCardAdapter(listfaq);
         recyclerView.setAdapter(adapter);
-        Context context = getApplicationContext();
         requestQueue = Volley.newRequestQueue(this);
         getData();
     }
@@ -86,7 +90,7 @@ public class FAQActivity extends AppCompatActivity {
     private void parseData(JSONArray array){
         for(int i = 0; i<array.length(); i++) {
             FAQ faq = new FAQ();
-            JSONObject json = null;
+            JSONObject json;
             try {
                 json = array.getJSONObject( i);
                 faq.setQuestion(json.getString("question"));

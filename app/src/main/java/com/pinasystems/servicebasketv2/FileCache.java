@@ -4,15 +4,12 @@ import android.content.Context;
 
 import java.io.File;
 
-/**
- * Created by admin on 12/7/2016.
- */
 
-public class FileCache {
+class FileCache {
 
     private File cacheDir;
 
-    public FileCache(Context context){
+    FileCache(Context context){
         //Find the dir to save cached images
         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
             cacheDir=new File(android.os.Environment.getExternalStorageDirectory(),"TempImages");
@@ -22,14 +19,13 @@ public class FileCache {
             cacheDir.mkdirs();
     }
 
-    public File getFile(String url){
+    File getFile(String url){
         String filename=String.valueOf(url.hashCode());
-        File f = new File(cacheDir, filename);
-        return f;
+        return new File(cacheDir, filename);
 
     }
 
-    public void clear(){
+    void clear(){
         File[] files=cacheDir.listFiles();
         if(files==null)
             return;

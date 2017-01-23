@@ -79,7 +79,7 @@ public class GetAddressDetailsActivity extends AppCompatActivity {
     public void addSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         addresslabels = getApplicationContext().getResources().getStringArray(R.array.address_labels);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,addresslabels);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, addresslabels);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

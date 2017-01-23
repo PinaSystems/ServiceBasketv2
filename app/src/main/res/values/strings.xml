@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Service Basket v2</string>
+    <string name="app_name">Service Basket</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email/Mobile no.</string>
@@ -186,6 +186,7 @@
 
     <string name="banner_ad_unit_id">ca-app-pub-3638041093684495/1415336969</string>
     <string name="interstitial_ad_unit_id">ca-app-pub-3638041093684495/2892070164</string>
+    <string name="server_client_id">758994762759-v53nhea7fqd0s37hh9ctpo58e1dqlg5m.apps.googleusercontent.com</string>
     <string name="video_ad_unit_id">ca-app-pub-3638041093684495/3635603363</string>
     <string name="title_activity_previous_requests">PreviousRequestsActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
@@ -196,5 +197,11 @@
         <item>Pricing received was high</item>
         <item>Found Service Provider externally</item>
     </string-array>
+    <string name="title_activity_chatbot">ChatbotActivity</string>
+
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="facebook_app_id">248366318934429</string>
 
 </resources>

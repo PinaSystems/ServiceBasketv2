@@ -1,6 +1,5 @@
 package com.pinasystems.servicebasketv2;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,19 +8,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by admin on 11/2/2016.
- */
-public class PrevRequestCardAdapter extends RecyclerView.Adapter<PrevRequestCardAdapter.ViewHolder> {
+class PrevRequestCardAdapter extends RecyclerView.Adapter<PrevRequestCardAdapter.ViewHolder> {
 
-    private Context context;
+    private List<PrevRequests> requests;
 
-    List<PrevRequests> requests;
-
-    public PrevRequestCardAdapter(List<PrevRequests> requests, Context context){
+    PrevRequestCardAdapter(List<PrevRequests> requests){
         super();
         this.requests = requests;
-        this.context = context;
     }
 
     @Override
@@ -46,11 +39,11 @@ public class PrevRequestCardAdapter extends RecyclerView.Adapter<PrevRequestCard
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView textViewDate;
-        public TextView textViewSubcategory;
-        public TextView textViewDescription;
+        TextView textViewDate;
+        TextView textViewSubcategory;
+        TextView textViewDescription;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             textViewDate= (TextView) itemView.findViewById(R.id.date);
             textViewSubcategory= (TextView) itemView.findViewById(R.id.category);
