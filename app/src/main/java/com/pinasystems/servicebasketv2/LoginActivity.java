@@ -89,6 +89,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private String URL;
     boolean islogin;
     String loginid;
+  
     GoogleApiClient mGoogleApiClient;
    // private FirebaseAuth mAuth;
     //private FirebaseAuth.AuthStateListener mAuthListener;
@@ -348,7 +349,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 });
     }
     */
-
     private void Initialize() {
         SharedPreferences sharedPreferences = getSharedPreferences(AppConfig.APP_PREFS_NAME, MODE_PRIVATE);
         String restoredText = sharedPreferences.getString(AppConfig.PREF_DATA, null);

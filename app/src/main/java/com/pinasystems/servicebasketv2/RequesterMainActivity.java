@@ -239,7 +239,6 @@ public class RequesterMainActivity extends AppCompatActivity
     String beauty = "-> Bleaching \n-> Facial \n-> Cleanup \n-> Hair-Care\n & more";
     String finance = "-> Tax \n-> Financial Planner \n-> Insurance";
     String travel = "-> Agents \n-> Tours \n-> Driver \n-> Cab or Auto";
-
     private String [] categorydesc = {cleaning , beauty , finance , travel};
 
     private String [] categorynames = {"Cleaning","Beauty","Finance","Travel"};
